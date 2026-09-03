@@ -1,175 +1,160 @@
-document.addEventListener("DOMContentLoaded", function () {
-  const { Client, Account, ID, Databases } = Appwrite;
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-app.js";
+import {
+  getAuth,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  signInWithPopup,
+  GoogleAuthProvider,
+  signOut,
+  onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/11.4.0/firebase-auth.js";
 
-  // Initialize Appwrite client
-  const client = new Client();
-  client
-    .setEndpoint("https://fra.cloud.appwrite.io/v1")
-    .setProject("6824e596002e077be92c");
+// Firebase Configuration from user
+const firebaseConfig = {
+  apiKey: "AIzaSyDFYqv2K6B4v6fDJWpzRdkNLLa2dK-z9J4",
+  authDomain: "healthify-71a2d.firebaseapp.com",
+  projectId: "healthify-71a2d",
+  storageBucket: "healthify-71a2d.firebasestorage.app",
+  messagingSenderId: "317330842878",
+  appId: "1:317330842878:web:040b8043fb4959ae63b1af"
+};
 
-  const account = new Account(client);
-  const databases = new Databases(client);
-  const databaseId = "6824e8fe00333d476f22";
-  const collectionId = "6824e90e0011734e58cc";
+// Initialize Firebase App & Auth
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const googleProvider = new GoogleAuthProvider();
 
+document.addEventListener("DOMContentLoaded", () => {
+  const authBtnP = document.getElementById("auth-btn-phone");
+  const authBtnD = document.getElementById("auth-btn-desktop");
   const signupForm = document.querySelector("#signupform");
   const loginForm = document.querySelector("#loginform");
+  const googleLoginBtn = document.getElementById("googleLoginBtn");
+  const errorBox = document.getElementById("errorBox");
 
-  const authHandler = async () => {
-    try {
-      const user = await account.get();
-      const authBtnP = document.getElementById("auth-btn-phone");
-      const authBtnD = document.getElementById("auth-btn-desktop");
+  // Track Firebase Auth status
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      const userData = {
+        uid: user.uid,
+        email: user.email,
+        displayName: user.displayName || user.email.split("@")[0]
+      };
+      localStorage.setItem("user", JSON.stringify(userData));
 
-      if (user) {
-        if (authBtnP) authBtnP.innerHTML = "Logout";
-        if (authBtnD) authBtnD.innerHTML = "Logout";
-        if (authBtnP) authBtnP.addEventListener("click", logout);
-        if (authBtnD) authBtnD.addEventListener("click", logout);
-      } else {
-        if (authBtnP) authBtnP.innerHTML = "Login / Signup";
-        if (authBtnD) authBtnD.innerHTML = "Login / Signup";
-        if (authBtnP) {
-          authBtnP.removeEventListener("click", logout);
-          authBtnP.addEventListener("click", () => {
-            window.location.href = "LoginSignup.html";
-          });
-        }
-        if (authBtnD) {
-          authBtnD.removeEventListener("click", logout);
-          authBtnD.addEventListener("click", () => {
-            window.location.href = "LoginSignup.html";
-          });
-        }
+      if (authBtnP) {
+        authBtnP.innerHTML = "Logout";
+        authBtnP.onclick = handleLogout;
       }
-    } catch (error) {
-      console.log("User not logged in", error);
-    }
-  };
-
-  const logout = async () => {
-    try {
-      await account.deleteSession("current");
+      if (authBtnD) {
+        authBtnD.innerHTML = "Logout";
+        authBtnD.onclick = handleLogout;
+      }
+    } else {
       localStorage.removeItem("user");
-      location.reload();
-    } catch (error) {
-      console.log("Logout failed", error);
+      if (authBtnP) {
+        authBtnP.innerHTML = "Login / Signup";
+        authBtnP.onclick = () => { window.location.href = "LoginSignup.html"; };
+      }
+      if (authBtnD) {
+        authBtnD.innerHTML = "Login / Signup";
+        authBtnD.onclick = () => { window.location.href = "LoginSignup.html"; };
+      }
     }
-  };
+  });
 
-  authHandler();
+  async function handleLogout(e) {
+    if (e) e.preventDefault();
+    try {
+      await signOut(auth);
+      localStorage.removeItem("user");
+      alert("Logged out successfully");
+      window.location.href = "index.html";
+    } catch (err) {
+      console.error("Logout error:", err);
+    }
+  }
 
-  // ====================
-  // Signup Handler
-  // ====================
+  // Handle Email & Password Signup
   if (signupForm) {
     signupForm.addEventListener("submit", async (e) => {
       e.preventDefault();
-      const name = signupForm.querySelector("#name")?.value || "User";
-      const email = signupForm.querySelector("#email")?.value;
-      const password = signupForm.querySelector("#password")?.value;
+      if (errorBox) errorBox.textContent = "";
 
-      if (!email.includes("@")) {
-        alert("Please enter a valid email address");
+      const email = signupForm.querySelector("#email")?.value.trim();
+      const password = signupForm.querySelector("#password")?.value.trim();
+
+      if (!email || !email.includes("@")) {
+        const msg = "Please enter a valid email address.";
+        if (errorBox) errorBox.textContent = msg; else alert(msg);
         return;
       }
-      if (password.length < 8) {
-        alert("Password must be at least 8 characters");
+      if (!password || password.length < 6) {
+        const msg = "Password must be at least 6 characters.";
+        if (errorBox) errorBox.textContent = msg; else alert(msg);
         return;
       }
 
       try {
-        const response = await account.create(ID.unique(), email, password, name);
-
-        await databases.createDocument(databaseId, collectionId, ID.unique(), {
-          email,
-          name,
-          userId: response.$id
-        });
-
-        localStorage.setItem("user", JSON.stringify(response));
-        alert("Account created successfully! Please login.");
-        window.location.href = "LoginSignup.html";
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+        console.log("Signup success:", userCredential.user);
+        alert("Account created successfully!");
+        window.location.href = "profile.html";
       } catch (error) {
-        console.error(error);
-        if (error.code === 409) {
-          alert("Account already exists. Please login instead.");
-        } else {
-          alert("Signup failed. Please try again.");
-        }
+        console.error("Signup error:", error);
+        let msg = "Signup failed. Please try again.";
+        if (error.code === "auth/email-already-in-use") msg = "This email is already in use.";
+        else if (error.code === "auth/weak-password") msg = "Password should be at least 6 characters.";
+        if (errorBox) errorBox.textContent = msg; else alert(msg);
       }
     });
   }
 
-  // ====================
-  // Login Handler
-  // ====================
+  // Handle Email & Password Login
   if (loginForm) {
     loginForm.addEventListener("submit", async (e) => {
       e.preventDefault();
-      const email = loginForm.querySelector("#email")?.value;
-      const password = loginForm.querySelector("#password")?.value;
+      if (errorBox) errorBox.textContent = "";
 
-      if (!email.includes("@")) {
-        alert("Please enter a valid email address");
-        return;
-      }
-      if (password.length < 8) {
-        alert("Password must be at least 8 characters");
+      const email = loginForm.querySelector("#email")?.value.trim();
+      const password = loginForm.querySelector("#password")?.value.trim();
+
+      if (!email || !email.includes("@")) {
+        const msg = "Please enter a valid email address.";
+        if (errorBox) errorBox.textContent = msg; else alert(msg);
         return;
       }
 
       try {
-        const response = await account.createEmailSession(email, password);
-        localStorage.setItem("user", JSON.stringify(response));
+        const userCredential = await signInWithEmailAndPassword(auth, email, password);
+        console.log("Login success:", userCredential.user);
         alert("Logged in successfully!");
         window.location.href = "profile.html";
       } catch (error) {
-        console.error(error);
-        alert("Login failed. Please check your credentials and try again.");
+        console.error("Login error:", error);
+        let msg = "Login failed. Please check your credentials.";
+        if (error.code === "auth/invalid-credential" || error.code === "auth/user-not-found" || error.code === "auth/wrong-password") {
+          msg = "Invalid email or password.";
+        }
+        if (errorBox) errorBox.textContent = msg; else alert(msg);
       }
     });
   }
 
-  // ====================
-  // Google OAuth Login
-  // ====================
-  const googleLoginBtn = document.getElementById("googleLoginBtn");
-
+  // Handle Google OAuth Login
   if (googleLoginBtn) {
-    googleLoginBtn.addEventListener("click", () => {
-      const baseURL = window.location.origin;
-      account.createOAuth2Session(
-        "google",
-        `${baseURL}/public/profile.html`,
-        `${baseURL}/public/LoginSignup.html`
-      );
+    googleLoginBtn.addEventListener("click", async () => {
+      if (errorBox) errorBox.textContent = "";
+      try {
+        const result = await signInWithPopup(auth, googleProvider);
+        console.log("Google Sign-In success:", result.user);
+        alert("Signed in with Google successfully!");
+        window.location.href = "profile.html";
+      } catch (error) {
+        console.error("Google sign in error:", error);
+        const msg = error.message || "Google Sign-In failed.";
+        if (errorBox) errorBox.textContent = msg; else alert(msg);
+      }
     });
   }
-
-  // ====================
-  // Sync Google User
-  // ====================
-  const syncGoogleUser = async () => {
-    try {
-      const user = await account.get();
-      await databases.createDocument(databaseId, collectionId, ID.unique(), {
-        email: user.email,
-        name: user.name,
-        userId: user.$id
-      });
-    } catch (err) {
-      console.error("Failed to sync Google user", err);
-    }
-  };
-
-  window.addEventListener("load", () => {
-    if (
-      window.location.pathname.endsWith("/public/index.html") ||
-      window.location.pathname === "/" ||
-      window.location.pathname.includes("/public/index.html")
-    ) {
-      syncGoogleUser();
-    }
-  });
 });
