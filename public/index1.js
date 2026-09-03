@@ -61,21 +61,22 @@ document.addEventListener("DOMContentLoaded", () => {
       let existingBadge = container ? container.querySelector(".user-profile-badge") : null;
 
       if (user) {
-        // User is logged in: remove/hide Login button and show user name + logout button
+        // User is logged in: remove/hide Login button and show sleek user profile badge
         const rawName = user.displayName || (user.email ? user.email.split("@")[0] : "User");
         const formattedName = rawName.charAt(0).toUpperCase() + rawName.slice(1);
 
         if (!existingBadge) {
           existingBadge = document.createElement("div");
-          existingBadge.className = "user-profile-badge inline-flex items-center gap-2 bg-blue-50 border border-blue-200 px-3 py-1.5 rounded-full text-blue-800 font-semibold text-xs md:text-sm shadow-sm transition-all";
+          existingBadge.className = "user-profile-badge inline-flex items-center gap-2 bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200/80 px-3 py-1 rounded-full text-blue-900 font-semibold text-xs md:text-sm shadow-xs transition-all";
           existingBadge.innerHTML = `
-            <span class="flex items-center gap-1.5">
-              <svg class="w-4 h-4 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
+            <span class="flex items-center gap-1.5 font-medium text-blue-900">
+              <svg class="w-4 h-4 text-blue-600 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
                 <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"></path>
               </svg>
-              <span>${formattedName}</span>
+              <span class="max-w-[120px] truncate">${formattedName}</span>
             </span>
-            <button class="header-logout-btn bg-rose-500 hover:bg-rose-600 text-white px-2.5 py-0.5 rounded-full text-xs font-bold transition-all shadow-sm">
+            <span class="text-blue-300">|</span>
+            <button class="header-logout-btn text-xs text-slate-500 hover:text-red-600 font-medium transition-colors cursor-pointer focus:outline-none">
               Logout
             </button>
           `;
