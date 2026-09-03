@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Healthify</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet" />
+  <link rel="icon" type="image/png" sizes="32x32" href=".\src\img\aimed-icon.png" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+</head>
+
+<style>
+  :root {
+    ::-webkit-scrollbar {
+      height: 10px;
+      width: 10px
+    }
+
+    ::-webkit-scrollbar-track {
+      background: #efefef;
+      border-radius: 6px
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: #d5d5d5;
+      border-radius: 6px
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: #c4c4c4
+    }
+  }
+
+  @keyframes floating {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+    100% { transform: translateY(0px); }
+  }
+
+  .floating-animation { animation: floating 3s ease-in-out infinite; }
+
+  @keyframes gradientBG {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+
+  .gradient-animation {
+    background: linear-gradient(-45deg, #3b82f6, #6366f1, #8b5cf6, #ec4899);
+    background-size: 400% 400%;
+    animation: gradientBG 15s ease infinite;
+  }
+
+  #analyze-btn {
+    background: linear-gradient(135deg, #1cd9ff 0%, #ff4be4 100%);
+    transition: all 0.4s ease;
+    transform: translateY(0);
+    box-shadow: 0 4px 6px -1px rgba(16, 185, 129, 0.2);
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+    height: 48px;
+    padding: 12px 24px;
+    font-size: 16px;
+    border-radius: 8px;
+  }
+
+  #analyze-btn:hover { transform: translateY(-2px); }
+
+  .nav-link {
+    position: relative;
+    display: inline-block;
+    transition: all 0.4s;
+  }
+
+  .nav-link:hover { transform: scale(1.1); }
+</style>
+
+<body class="bg-gray-100">
+
+<nav class="bg-white/80 backdrop-blur-md shadow-sm sticky top-0 z-50">
+  <div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
+    <div class="flex items-center space-x-2">
+      <img src="./src/img/aimed-icon-removebg.png" alt="Logo" class="h-10" />
+      <span class="text-xl font-bold bg-gradient-to-r from-blue-600 to-green-600 bg-clip-text text-transparent">Healthify</span>
+    </div>
+    <div class="hidden md:flex space-x-6 text-sm font-medium">
+      <a href="index.html" class="nav-link">Home</a>
+      <a href="extract-text.html" class="nav-link">Prescription</a>
+      <a href="predictor.html" class="nav-link">Diagnosis</a>
+      <a href="LoginSignup.html" class="nav-link">Login</a>
+    </div>
+  </div>
+</nav>
+
+<div class="w-full m-0 p-0 bg-cover bg-bottom gradient-animation">
+  <div class="font-extrabold container max-w-4xl mx-auto pt-28 pb-6 text-center">
+    <div class="text-white text-2xl md:text-5xl floating-animation">Disease Predictor</div>
+    <p class="text-xl md:text-2xl text-gray-300">Get probable diseases & treatment</p>
+  </div>
+</div>
+
+<main class="container px-4 py-8">
+  <div class="grid grid-cols-1 gap-4">
+    <div class="bg-white rounded-lg p-8 whitespace-normal">
+      <p class="pl-1 pb-2 text-sm">Write the symptoms you are experiencing</p>
+      <input title="text-input" type="text" id="text-input"
+        class="w-full px-4 py-2 border border-green-300 rounded-md shadow-sm"
+        value="runny nose, tickly throat, sneezing, watering eyes">
+    </div>
+
+    <div class="bg-white rounded-lg p-4 whitespace-normal flex flex-col items-center">
+      <button id="analyze-btn">
+        <span class="flex items-center justify-center">
+          <i class="fas fa-search mr-2"></i> Analyze Symptoms
+        </span>
+      </button>
+
+      <button disabled id="load-btn" class="hidden py-2.5 px-5 mt-3 text-sm font-medium bg-white rounded-full border"> 
+        Loading...
+      </button>
+
+      <div id="loading-animation" class="hidden w-full max-w-md mx-auto text-center mt-3">
+        <p class="text-gray-500 animate-pulse">Analyzing your symptoms...</p>
+      </div>
+
+      <div id="analysis-result" class="w-full p-4"></div>
+    </div>
+  </div>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/alpinejs@2.8.2/dist/alpine.min.js" defer></script>
+<script type="module">
+
+  const GROQ_API_KEY = process?.env?.GROQ_API_KEY || "YOUR_GROQ_API_KEY";
+
+  document.getElementById("analyze-btn").addEventListener("click", analyzeText);
+
+  async function analyzeText() {
+    const output = document.getElementById("analysis-result");
+    const loading = document.getElementById("loading-animation");
+    const loadBtn = document.getElementById("load-btn");
+    const mainBtn = document.getElementById("analyze-btn");
+
+    loading.classList.remove("hidden");
+    loadBtn.classList.remove("hidden");
+    mainBtn.classList.add("hidden");
+    output.innerHTML = "";
+
+    try {
+      const symptoms = document.getElementById("text-input").value;
+
+      const prompt = `
+      You are a medical assistant.
+      Analyze these symptoms: ${symptoms}
+
+      Return STRICT JSON:
+      [
+        {
+          "disease": "",
+          "description": "",
+          "probability": "",
+          "symptoms": "",
+          "treatment": ""
+        }
+      ]
+      Only return JSON.
+      `;
+
+      const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+        method: "POST",
+        headers: {
+          "Authorization": "Bearer " + GROQ_API_KEY,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          model: "openai/gpt-oss-120b",
+          messages: [{ role: "user", content: prompt }]
+        })
+      });
+
+      const data = await response.json();
+      console.log("Groq response:", data);
+
+      if (!data.choices || !data.choices[0]) {
+        output.innerHTML = `
+          <div class="bg-red-100 border border-red-400 text-red-700 p-4 rounded">
+            <p><b>Groq API Error:</b></p>
+            <pre>${JSON.stringify(data, null, 2)}</pre>
+          </div>
+        `;
+        throw new Error("Groq returned no choices");
+      }
+
+      let text = data.choices[0].message.content;
+      text = text.replace(/```json|```/g, "");
+
+      generateDiseaseCards(text);
+
+    } catch (err) {
+      output.innerHTML = `
+        <div class="bg-red-100 border border-red-400 text-red-700 p-4 rounded">
+          <p><b>Error:</b> ${err.message}</p>
+        </div>
+      `;
+    }
+
+    loading.classList.add("hidden");
+    loadBtn.classList.add("hidden");
+    mainBtn.classList.remove("hidden");
+  }
+
+ function generateDiseaseCards(text) {
+  try {
+    const diseases = JSON.parse(text);
+    const result = document.getElementById("analysis-result");
+    result.innerHTML = "";
+
+    // UNIVERSAL PROBABILITY PARSER
+    function parseProbability(prob) {
+      if (!prob) return 50;
+
+      let p = String(prob).trim().toLowerCase();
+
+      // 1. Text values: high/medium/low
+      if (p.includes("high")) return 80;
+      if (p.includes("medium")) return 55;
+      if (p.includes("low")) return 25;
+
+      // 2. Ranges: 70–80
+      let rangeMatch = p.match(/(\d+)\s*[-–]\s*(\d+)/);
+      if (rangeMatch) {
+        let low = parseInt(rangeMatch[1]);
+        let high = parseInt(rangeMatch[2]);
+        return Math.round((low + high) / 2);
+      }
+
+      // 3. Decimal or percent (0.8 → 80, 80% → 80)
+      let numMatch = p.match(/\d+(\.\d+)?/);
+      if (numMatch) {
+        let num = parseFloat(numMatch[0]);
+
+        if (num <= 1) return Math.round(num * 100); // convert decimal
+        if (num <= 100) return num; // already percent
+      }
+
+      return 50; // fallback
+    }
+
+    // PROGRESS BAR ANIMATION
+    function animateBar(barElement, targetValue) {
+      let current = 0;
+
+      const interval = setInterval(() => {
+        if (current >= targetValue) {
+          clearInterval(interval);
+        } else {
+          current++;
+          barElement.style.width = current + "%";
+        }
+      }, 10);
+    }
+
+    diseases.forEach(d => {
+      let rawProb = d.probability;
+      let probValue = parseProbability(rawProb);
+
+      // Color logic
+      let probColor = "bg-green-500";
+      if (probValue >= 70) probColor = "bg-red-500";
+      else if (probValue >= 40) probColor = "bg-yellow-500";
+
+      // Symptoms formatting
+      const symptomTags = d.symptoms
+        .split(/,|\n|•/g)
+        .map(s => s.trim())
+        .filter(s => s.length)
+        .map(s => `<span class="px-2 py-1 bg-blue-100 text-blue-700 rounded-full text-xs mr-1">${s}</span>`)
+        .join("");
+
+      // Treatment formatting
+      const treatmentList = d.treatment
+        .split(/,|\n|•/g)
+        .map(t => t.trim())
+        .filter(t => t.length)
+        .map(t => `<li class="text-gray-700">• ${t}</li>`)
+        .join("");
+
+      // CARD TEMPLATE
+      result.innerHTML += `
+        <div class="animate__animated animate__fadeInUp bg-white shadow-lg p-6 rounded-2xl border border-gray-200 mb-6">
+
+          <h2 class="text-2xl font-bold text-green-700 flex items-center gap-2">
+            <i class="fa-solid fa-virus"></i> ${d.disease}
+          </h2>
+
+          <p class="text-gray-800 leading-relaxed mt-2">${d.description}</p>
+
+          <!-- PROBABILITY SECTION -->
+          <div class="mt-4">
+            <p class="font-semibold text-gray-700 mb-1">Probability</p>
+
+            <div class="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
+              <div class="${probColor} h-3 rounded-full bar-fill"
+                   data-target="${probValue}"
+                   style="width: 0%;">
+              </div>
+            </div>
+
+            <p class="text-sm text-gray-600 mt-1">${rawProb}</p>
+          </div>
+
+          <!-- SYMPTOMS -->
+          <div class="mt-4">
+            <p class="font-semibold text-gray-700 mb-1">Symptoms Detected</p>
+            <div class="flex flex-wrap gap-1">${symptomTags}</div>
+          </div>
+
+          <!-- TREATMENTS -->
+          <div class="mt-4">
+            <p class="font-semibold text-gray-700 mb-1">Recommended Treatment</p>
+            <ul class="ml-3">${treatmentList}</ul>
+          </div>
+
+        </div>
+      `;
+    });
+
+    // ACTIVATE BAR ANIMATION AFTER CARDS ARE ADDED
+    setTimeout(() => {
+      document.querySelectorAll(".bar-fill").forEach(bar => {
+        animateBar(bar, bar.getAttribute("data-target"));
+      });
+    }, 200);
+
+  } catch (error) {
+    document.getElementById("analysis-result").innerHTML = `
+      <div class="bg-red-50 p-4 text-red-700 rounded-lg border border-red-300">
+        Error processing JSON response
+      </div>`;
+  }
+}
+
+
+
+
+
+</script>
+
+
+
+</body>
+</html>

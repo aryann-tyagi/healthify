@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Healthify Login</title>
+  <link rel="icon" type="image/png" href="./src/img/aimed-icon.png" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.15/tailwind.min.css" />
+  <script src="https://cdn.jsdelivr.net/npm/appwrite@13.0.1"></script>
+</head>
+<style>
+  .bg-image {
+    background-image: url('./src/img/cover.jpeg');
+    background-size: cover;
+    background-repeat: no-repeat;
+  }
+</style>
+<body>
+  <section class="flex flex-col md:flex-row h-screen items-center">
+    <div class="bg-image bg-blue-200 hidden lg:block w-full md:w-1/2 xl:w-2/3 h-screen"></div>
+
+    <div class="bg-white w-full md:max-w-md lg:max-w-full md:mx-auto md:mx-0 md:w-1/2 xl:w-1/3 h-screen px-6 lg:px-16 xl:px-12 flex items-center justify-center">
+      <div class="w-full h-100">
+        <a href="./"><img src="./src/img/aimed.png" alt="brand logo" style="max-width: 160px; height: auto;" /></a>
+        <h1 class="text-xl md:text-2xl font-bold leading-tight mt-12">Log in to your account</h1>
+
+        <form id="loginform" class="mt-6">
+          <div>
+            <label class="block text-gray-700">Email Address</label>
+            <input type="email" id="email" placeholder="Enter Email Address" class="w-full px-4 py-3 rounded-lg bg-gray-200 mt-2 border focus:border-blue-500 focus:bg-white focus:outline-none" required>
+          </div>
+
+          <div class="mt-4">
+            <label class="block text-gray-700">Password</label>
+            <input type="password" id="password" placeholder="Enter Password" minlength="8" class="w-full px-4 py-3 rounded-lg bg-gray-200 mt-2 border focus:border-blue-500 focus:bg-white focus:outline-none" required>
+          </div>
+
+          <p id="errorBox" class="text-red-500 mt-2"></p>
+
+          <button type="submit" class="w-full block bg-gradient-to-r from-green-400 to-blue-500 hover:from-green-300 hover:to-blue-400 text-white font-semibold rounded-lg px-4 py-3 mt-6">
+            Log In
+          </button>
+
+          <div class="mt-4">
+            <button id="googleLoginBtn" type="button" class="w-full flex items-center justify-center bg-white border border-gray-300 rounded-lg px-4 py-3 text-gray-700 font-semibold hover:bg-gray-100">
+              <img src="https://developers.google.com/identity/images/g-logo.png" class="w-5 h-5 mr-2" alt="Google logo" />
+              Continue with Google
+            </button>
+          </div>
+        </form>
+
+        <hr class="my-6 border-gray-300 w-full" />
+
+        <p class="mt-8">
+          Need an account?
+          <a href="Signup.html" class="text-green-500 hover:text-green-700 font-semibold">Create an account</a>
+        </p>
+
+        <p class="text-sm text-gray-500 mt-12">&copy; Healthify<b>AI</b> - All Rights Reserved.</p>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const { Client, Account } = Appwrite;
+
+      const client = new Client();
+      client
+        .setEndpoint("https://fra.cloud.appwrite.io/v1")
+        .setProject("6824e596002e077be92c"); // Replace with your actual project ID
+
+      const account = new Account(client);
+      const form = document.getElementById("loginform");
+      const errorBox = document.getElementById("errorBox");
+
+      form.addEventListener("submit", async function (e) {
+        e.preventDefault();
+        errorBox.textContent = "";
+
+        const email = document.getElementById("email").value.trim();
+        const password = document.getElementById("password").value.trim();
+
+        if (!email.includes("@")) {
+          errorBox.textContent = "Invalid email address.";
+          return;
+        }
+
+        if (password.length < 8) {
+          errorBox.textContent = "Password must be at least 8 characters.";
+          return;
+        }
+
+        try {
+          const session = await account.createEmailSession(email, password);
+          console.log("Login successful:", session);
+          localStorage.setItem("user", JSON.stringify(session));
+          alert("Logged in successfully!");
+          window.location.href = "profile.html"; // Or your actual dashboard/profile page
+        } catch (err) {
+          console.error("Login error:", err);
+          if (err.code === 401) {
+            errorBox.textContent = "Invalid email or password.";
+          } else {
+            errorBox.textContent = "Login failed. Please try again.";
+          }
+        }
+      });
+
+      // Optional: Google login (if set up in Appwrite)
+      const googleLoginBtn = document.getElementById("googleLoginBtn");
+      if (googleLoginBtn) {
+        googleLoginBtn.addEventListener("click", () => {
+          const baseURL = window.location.origin;
+          account.createOAuth2Session(
+            "google",
+            `${baseURL}/public/index.html`, // success
+            `${baseURL}/LoginSignup.html` // failure
+          );
+        });
+      }
+    });
+  </script>
+</body>
+</html>

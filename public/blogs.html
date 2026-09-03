@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<meta http-equiv="X-UA-Compatible" content="ie=edge" />
+	<title>Healthify Blogs</title>
+	<meta name="author" content="Healthify Team" />
+	<meta name="description" content="Discover the latest healthcare insights and wellness tips from Healthify" />
+	<meta name="keywords" content="healthcare, wellness, nutrition, fitness, Healthify" />
+	<link rel="icon" type="image/png" sizes="32x32" href=".\src\img\aimed-icon.png" />
+	<link rel="stylesheet" href="https://unpkg.com/tailwindcss@2.2.19/dist/tailwind.min.css" />
+	<link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+		integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
+		crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+	<style>
+		:root {
+			--primary-color: #4b10b9;
+			--primary-dark: #059669;
+			--primary-light: #a7f3d0;
+		}
+
+		::-webkit-scrollbar {
+			height: 10px;
+			width: 10px;
+		}
+
+		::-webkit-scrollbar-track {
+			background: #efefef;
+			border-radius: 6px;
+		}
+
+		::-webkit-scrollbar-thumb {
+			background: var(--primary-color);
+			border-radius: 6px;
+		}
+
+		::-webkit-scrollbar-thumb:hover {
+			background: var(--primary-dark);
+		}
+
+		.hero-gradient {
+			background: linear-gradient(-45deg, #5968d7, #cd57df, #de89f6, #e93559);
+			background-size: 400% 400%;
+			animation: gradient 15s ease infinite;
+			height: 60vh;
+			max-height: 400px;
+		}
+
+		@keyframes gradient {
+			0% {
+				background-position: 0% 50%;
+			}
+			50% {
+				background-position: 100% 50%;
+			}
+			100% {
+				background-position: 0% 50%;
+			}
+		}
+
+		.card-hover {
+			transition: all 0.3s ease;
+		}
+
+		.card-hover:hover {
+			transform: translateY(-5px);
+			box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+		}
+
+		.article-image {
+			height: 200px;
+			object-fit: cover;
+			width: 100%;
+		}
+
+		.featured-image {
+			height: 100%;
+			min-height: 350px;
+			object-fit: cover;
+			width: 100%;
+		}
+
+		.tag {
+			display: inline-block;
+			background-color: var(--primary-light);
+			color: var(--primary-dark);
+			padding: 2px 8px;
+			border-radius: 4px;
+			font-size: 0.75rem;
+			font-weight: 600;
+			margin-right: 6px;
+		}
+
+		.subscribe-box {
+			background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+		}
+
+		.animate-float {
+			animation: float 6s ease-in-out infinite;
+		}
+
+		@keyframes float {
+			0% { transform: translateY(0px); }
+			50% { transform: translateY(-10px); }
+			100% { transform: translateY(0px); }
+		}
+	</style>
+</head>
+
+<body class="bg-gray-50 font-sans leading-normal tracking-normal">
+	
+	<!--Header-->
+	<header id="app-header"></header>
+	<script async src="./js/header.js"></script>  
+
+	<!-- Hero Section -->
+	<div class="w-full m-0 p-0 relative hero-gradient">
+		<div class="absolute inset-0 bg-black bg-opacity-30"></div>
+		<div class="font-extrabold container max-w-4xl mx-auto pt-40 md:pb-16 text-center relative z-10">
+			<h1 class="text-white text-3xl md:text-6xl sm:text-5xl animate__animated animate__fadeInDown">
+				HEALTHIFY BLOGS
+			</h1>
+			<p class="text-xl md:text-2xl text-gray-200 mt-4 animate__animated animate__fadeInUp">
+				Trending Healthcare Insights & Wellness Tips
+			</p>
+			<div class="mt-8 animate__animated animate__fadeIn animate__delay-1s">
+				<a href="#featured" class="bg-white text-green-600 hover:bg-green-600 hover:text-white font-bold py-3 px-6 rounded-full transition duration-300">
+					Explore Articles <i class="fas fa-arrow-down ml-2"></i>
+				</a>
+			</div>
+		</div>
+	</div>
+
+	<!--Container-->
+	<div class="container px-4 md:px-0 max-w-6xl mx-auto mt-8">
+		<div class="mx-0 sm:mx-6">
+			<div class="w-full text-xl md:text-2xl text-gray-800 leading-normal rounded-t">
+				<!--Featured Card-->
+				<div id="featured" class="flex h-full bg-white rounded-lg overflow-hidden shadow-xl card-hover border border-gray-100">
+					<a href="#" class="flex flex-wrap no-underline hover:no-underline group">
+						<div class="w-full md:w-2/3 rounded-t overflow-hidden">
+							<img src="https://images.unsplash.com/photo-1498837167922-ddd27525d352?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" 
+								class="featured-image group-hover:scale-105 transition duration-500" />
+						</div>
+
+						<div class="w-full md:w-1/3 flex flex-col flex-grow flex-shrink">
+							<div class="flex-1 bg-white rounded-t rounded-b-none overflow-hidden p-6">
+								<div class="flex flex-wrap mb-2">
+									<span class="tag">NUTRITION</span>
+									<span class="tag">WELLNESS</span>
+								</div>
+								<h2 class="w-full font-bold text-2xl text-gray-900 group-hover:text-green-600 transition duration-300">
+									👋 Welcome to Healthify Health Insights
+								</h2>
+								<p class="text-gray-600 text-base mt-4 mb-5">
+									Discover expert-curated content on healthcare, nutrition, and wellness. Our blogs combine cutting-edge research with practical advice to help you live your healthiest life.
+								</p>
+								<div class="flex items-center mt-6">
+									<i class="fas fa-star text-yellow-400 mr-1"></i>
+									<i class="fas fa-star text-yellow-400 mr-1"></i>
+									<i class="fas fa-star text-yellow-400 mr-1"></i>
+									<i class="fas fa-star text-yellow-400 mr-1"></i>
+									<i class="fas fa-star text-yellow-400 mr-1"></i>
+									<span class="text-gray-500 text-sm ml-2">Featured Article</span>
+								</div>
+							</div>
+
+							<div class="flex-none mt-auto bg-white rounded-b rounded-t-none overflow-hidden p-6">
+								<div class="flex items-center justify-between">
+									<div class="flex items-center">
+										<img class="w-10 h-10 rounded-full mr-4 avatar" data-tippy-content="Healthify Team"
+											src="http://i.pravatar.cc/300" alt="Avatar of Author" />
+										<div>
+											<p class="text-gray-900 font-medium">Healthify Team</p>
+											<p class="text-gray-500 text-sm">June 15, 2023 • 5 min read</p>
+										</div>
+									</div>
+									<i class="fas fa-bookmark text-gray-300 hover:text-green-500 cursor-pointer"></i>
+								</div>
+							</div>
+						</div>
+					</a>
+				</div>
+				<!--/Featured Card-->
+
+				<!--Articles Grid-->
+				<div class="flex flex-wrap justify-between pt-12 -mx-4">
+					<!--Article Card 1-->
+					<div class="w-full md:w-1/3 p-4 flex flex-col flex-grow flex-shrink">
+						<div class="flex-1 bg-white rounded-lg overflow-hidden shadow-md card-hover border border-gray-100">
+							<a href="#" class="flex flex-wrap no-underline hover:no-underline group">
+								<div class="relative overflow-hidden">
+									<img src="https://images.unsplash.com/photo-1490645935967-10de6ba17061?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1453&q=80"
+										class="article-image group-hover:scale-105 transition duration-500" />
+									<div class="absolute top-4 left-4">
+										<span class="tag">SUPERFOODS</span>
+									</div>
+								</div>
+								<div class="p-6">
+									<h3 class="font-bold text-xl text-gray-900 group-hover:text-green-600 transition duration-300 mb-2">
+										The Power of Superfoods: Boost Your Health Naturally
+									</h3>
+									<p class="text-gray-600 text-base mb-4">
+										Dive into the world of superfoods and discover how incorporating them into your diet can enhance your overall health and well-being.
+									</p>
+									<div class="flex items-center text-sm text-gray-500">
+										<i class="fas fa-clock mr-2"></i> 8 min read
+									</div>
+								</div>
+							</a>
+						</div>
+					</div>
+
+					<!--Article Card 2-->
+					<div class="w-full md:w-1/3 p-4 flex flex-col flex-grow flex-shrink">
+						<div class="flex-1 bg-white rounded-lg overflow-hidden shadow-md card-hover border border-gray-100">
+							<a href="#" class="flex flex-wrap no-underline hover:no-underline group">
+								<div class="relative overflow-hidden">
+									<img src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1480&q=80"
+										class="article-image group-hover:scale-105 transition duration-500" />
+									<div class="absolute top-4 left-4">
+										<span class="tag">MINDFULNESS</span>
+									</div>
+								</div>
+								<div class="p-6">
+									<h3 class="font-bold text-xl text-gray-900 group-hover:text-green-600 transition duration-300 mb-2">
+										Unlocking the Benefits of Mindful Eating
+									</h3>
+									<p class="text-gray-600 text-base mb-4">
+										Explore how mindful eating can transform your relationship with food, leading to improved digestion and greater satisfaction.
+									</p>
+									<div class="flex items-center text-sm text-gray-500">
+										<i class="fas fa-clock mr-2"></i> 6 min read
+									</div>
+								</div>
+							</a>
+						</div>
+					</div>
+
+					<!--Article Card 3-->
+					<div class="w-full md:w-1/3 p-4 flex flex-col flex-grow flex-shrink">
+						<div class="flex-1 bg-white rounded-lg overflow-hidden shadow-md card-hover border border-gray-100">
+							<a href="#" class="flex flex-wrap no-underline hover:no-underline group">
+								<div class="relative overflow-hidden">
+									<img src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80"
+										class="article-image group-hover:scale-105 transition duration-500" />
+									<div class="absolute top-4 left-4">
+										<span class="tag">FITNESS</span>
+										<span class="tag">WORKOUT</span>
+									</div>
+								</div>
+								<div class="p-6">
+									<h3 class="font-bold text-xl text-gray-900 group-hover:text-green-600 transition duration-300 mb-2">
+										Building a Sustainable Fitness Routine
+									</h3>
+									<p class="text-gray-600 text-base mb-4">
+										Discover the key components of a well-rounded fitness routine that fits your lifestyle and goals.
+									</p>
+									<div class="flex items-center text-sm text-gray-500">
+										<i class="fas fa-clock mr-2"></i> 10 min read
+									</div>
+								</div>
+							</a>
+						</div>
+					</div>
+
+					<!--Article Card 4 (Wider)-->
+					<div class="w-full md:w-1/2 p-4 flex flex-col flex-grow flex-shrink">
+						<div class="flex-1 bg-white rounded-lg overflow-hidden shadow-md card-hover border border-gray-100">
+							<a href="#" class="flex flex-wrap no-underline hover:no-underline group">
+								<div class="relative overflow-hidden">
+									<img src="https://images.unsplash.com/photo-1590487988256-9ed24133863e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1472&q=80"
+										class="h-64 w-full object-cover group-hover:scale-105 transition duration-500" />
+									<div class="absolute top-4 left-4">
+										<span class="tag">MENTAL HEALTH</span>
+										<span class="tag">NEUROSCIENCE</span>
+									</div>
+								</div>
+								<div class="p-6">
+									<h3 class="font-bold text-xl text-gray-900 group-hover:text-green-600 transition duration-300 mb-2">
+										The Gut-Brain Connection: How Your Gut Health Impacts Mental Well-Being
+									</h3>
+									<p class="text-gray-600 text-base mb-4">
+										Delve into the fascinating relationship between gut health and mental health, exploring how the gut microbiome influences mood and cognition.
+									</p>
+									<div class="flex items-center text-sm text-gray-500">
+										<i class="fas fa-clock mr-2"></i> 12 min read
+									</div>
+								</div>
+							</a>
+						</div>
+					</div>
+
+					<!--Article Card 5 (Wider)-->
+					<div class="w-full md:w-1/2 p-4 flex flex-col flex-grow flex-shrink">
+						<div class="flex-1 bg-white rounded-lg overflow-hidden shadow-md card-hover border border-gray-100">
+							<a href="#" class="flex flex-wrap no-underline hover:no-underline group">
+								<div class="relative overflow-hidden">
+									<img src="https://images.unsplash.com/photo-1547592180-85f173990554?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80"
+										class="h-64 w-full object-cover group-hover:scale-105 transition duration-500" />
+									<div class="absolute top-4 left-4">
+										<span class="tag">NUTRITION</span>
+										<span class="tag">LIFESTYLE</span>
+									</div>
+								</div>
+								<div class="p-6">
+									<h3 class="font-bold text-xl text-gray-900 group-hover:text-green-600 transition duration-300 mb-2">
+										Healthy Eating Tips for Busy Professionals
+									</h3>
+									<p class="text-gray-600 text-base mb-4">
+										Get practical advice on maintaining a nutritious diet amidst a hectic schedule, with tips for meal planning and healthy snacking.
+									</p>
+									<div class="flex items-center text-sm text-gray-500">
+										<i class="fas fa-clock mr-2"></i> 7 min read
+									</div>
+								</div>
+							</a>
+						</div>
+					</div>
+
+					<!--Article Card 6 (Wider)-->
+					<div class="w-full md:w-2/3 p-4 flex flex-col flex-grow flex-shrink">
+						<div class="flex-1 bg-white rounded-lg overflow-hidden shadow-md card-hover border border-gray-100">
+							<a href="#" class="flex flex-wrap no-underline hover:no-underline group">
+								<div class="relative overflow-hidden">
+									<img src="https://images.unsplash.com/photo-1547592180-85f173990554?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80"
+										class="h-72 w-full object-cover group-hover:scale-105 transition duration-500" />
+									<div class="absolute top-4 left-4">
+										<span class="tag">MEAL PREP</span>
+										<span class="tag">TIME SAVING</span>
+									</div>
+								</div>
+								<div class="p-6">
+									<h3 class="font-bold text-2xl text-gray-900 group-hover:text-green-600 transition duration-300 mb-2">
+										Mastering Meal Prep: Simplify Your Week with Batch Cooking
+									</h3>
+									<p class="text-gray-600 text-base mb-4">
+										Learn the art of meal prep and discover how it can save you time, money, and stress while helping you stay on track with your health goals.
+									</p>
+									<div class="flex items-center justify-between">
+										<div class="flex items-center text-sm text-gray-500">
+											<i class="fas fa-clock mr-2"></i> 15 min read
+										</div>
+										<div class="flex items-center">
+											<i class="fas fa-share-alt text-gray-400 hover:text-green-500 cursor-pointer mr-4"></i>
+											<i class="far fa-bookmark text-gray-400 hover:text-green-500 cursor-pointer"></i>
+										</div>
+									</div>
+								</div>
+							</a>
+						</div>
+					</div>
+
+					<!--Article Card 7-->
+					<div class="w-full md:w-1/3 p-4 flex flex-col flex-grow flex-shrink">
+						<div class="flex-1 bg-white rounded-lg overflow-hidden shadow-md card-hover border border-gray-100">
+							<a href="#" class="flex flex-wrap no-underline hover:no-underline group">
+								<div class="relative overflow-hidden">
+									<img src="https://images.unsplash.com/photo-1606787366850-de6330128bfc?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80"
+										class="h-72 w-full object-cover group-hover:scale-105 transition duration-500" />
+									<div class="absolute top-4 left-4">
+										<span class="tag">ALLERGIES</span>
+										<span class="tag">HEALTH</span>
+									</div>
+								</div>
+								<div class="p-6">
+									<h3 class="font-bold text-xl text-gray-900 group-hover:text-green-600 transition duration-300 mb-2">
+										Navigating Food Allergies and Sensitivities
+									</h3>
+									<p class="text-gray-600 text-base mb-4">
+										Gain insights into identifying and managing food allergies with strategies for navigating menus and reading labels.
+									</p>
+									<div class="flex items-center justify-between">
+										<div class="flex items-center text-sm text-gray-500">
+											<i class="fas fa-clock mr-2"></i> 9 min read
+										</div>
+										<div class="flex items-center">
+											<i class="fas fa-share-alt text-gray-400 hover:text-green-500 cursor-pointer mr-4"></i>
+											<i class="far fa-bookmark text-gray-400 hover:text-green-500 cursor-pointer"></i>
+										</div>
+									</div>
+								</div>
+							</a>
+						</div>
+					</div>
+				</div>
+				<!--/Articles Grid-->
+
+				<!--Popular Categories-->
+				<div class="mt-16">
+					<h2 class="text-3xl font-bold text-gray-900 mb-8 text-center">Popular Categories</h2>
+					<div class="flex flex-wrap justify-center gap-4">
+						<a href="#" class="px-6 py-3 bg-green-100 hover:bg-green-200 text-green-800 rounded-full font-medium transition duration-300">
+							<i class="fas fa-heartbeat mr-2"></i> Heart Health
+						</a>
+						<a href="#" class="px-6 py-3 bg-blue-100 hover:bg-blue-200 text-blue-800 rounded-full font-medium transition duration-300">
+							<i class="fas fa-brain mr-2"></i> Mental Wellness
+						</a>
+						<a href="#" class="px-6 py-3 bg-yellow-100 hover:bg-yellow-200 text-yellow-800 rounded-full font-medium transition duration-300">
+							<i class="fas fa-apple-alt mr-2"></i> Nutrition
+						</a>
+						<a href="#" class="px-6 py-3 bg-purple-100 hover:bg-purple-200 text-purple-800 rounded-full font-medium transition duration-300">
+							<i class="fas fa-running mr-2"></i> Fitness
+						</a>
+						<a href="#" class="px-6 py-3 bg-red-100 hover:bg-red-200 text-red-800 rounded-full font-medium transition duration-300">
+							<i class="fas fa-allergies mr-2"></i> Allergies
+						</a>
+						<a href="#" class="px-6 py-3 bg-indigo-100 hover:bg-indigo-200 text-indigo-800 rounded-full font-medium transition duration-300">
+							<i class="fas fa-child mr-2"></i> Pediatrics
+						</a>
+					</div>
+				</div>
+				<!--/Popular Categories-->
+				
+				<!--Subscribe-->
+				<div class="subscribe-box rounded-xl mt-16 p-8 md:p-12 text-center relative overflow-hidden">
+					<div class="absolute -right-10 -top-10 w-32 h-32 bg-green-200 rounded-full opacity-20"></div>
+					<div class="absolute -left-10 -bottom-10 w-40 h-40 bg-green-300 rounded-full opacity-20"></div>
+					<div class="relative z-10">
+						<h2 class="font-bold break-normal text-3xl md:text-4xl mb-4">
+							Subscribe to Healthify Health Insights
+						</h2>
+						<h3 class="break-normal font-normal text-gray-700 text-lg md:text-xl mb-6">
+							Get the latest healthcare articles and wellness tips delivered to your inbox weekly
+						</h3>
+						<div class="w-full max-w-xl mx-auto">
+							<form action="#" class="flex flex-col sm:flex-row gap-4">
+								<input type="email" placeholder="Your email address"
+									class="flex-grow appearance-none rounded-lg shadow-sm p-4 text-gray-700 focus:outline-none focus:ring-2 focus:ring-green-500" />
+								<button type="submit"
+									class="w-full sm:w-auto py-4 px-8 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-lg shadow-md transition duration-300">
+									Subscribe Now
+								</button>
+							</form>
+							<p class="text-gray-600 text-sm mt-4">
+								We respect your privacy. Unsubscribe at any time.
+							</p>
+						</div>
+					</div>
+				</div>
+				<!-- /Subscribe-->
+
+				<!--Author-->
+				<div class="flex flex-col md:flex-row w-full items-center justify-between p-8 md:p-12 mt-12 bg-white rounded-xl shadow-sm border border-gray-100">
+					<div class="flex items-center mb-6 md:mb-0">
+						<img class="w-16 h-16 rounded-full mr-6 animate-float" src="./src/img/aimed-icon.png" alt="Healthify Logo" />
+						<div>
+							<p class="text-xl font-bold leading-none text-gray-900">
+								Healthify Health Insights
+							</p>
+							<p class="text-gray-600 mt-2">
+								Your trusted source for evidence-based healthcare information
+							</p>
+						</div>
+					</div>
+					<div class="flex flex-col sm:flex-row gap-4">
+						<a href="./" class="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-lg transition duration-300 text-center">
+							Try Our Features
+						</a>
+						<a href="#" class="bg-white border border-gray-300 hover:border-green-500 text-gray-700 hover:text-green-600 font-bold py-3 px-6 rounded-lg transition duration-300 text-center">
+							About Us
+						</a>
+					</div>
+				</div>
+				<!--/Author-->
+			</div>
+		</div>
+	</div>
+
+	<header id="app-footer"></header>
+	<script async src="./js/footer.js"></script>  
+
+	<script async src="dist/bundle.js"></script>
+	<header id="app-phone-nav"></header>
+	<script async src="./js/phone-nav.js"></script>  
+
+	<script src="https://unpkg.com/@popperjs/core@2"></script>
+	<script src="https://unpkg.com/tippy.js@6"></script>
+	<script>
+		//Init tooltips
+		tippy(".avatar", {
+			theme: 'light-border'
+		});
+	</script>
+	<script type="text/javascript">
+		function googleTranslateElementInit() {
+			new google.translate.TranslateElement(
+				{
+					pageLanguage: "en",
+					ignoreWords: "prescription,aimed,AI-MED,WHO",
+					includedLanguages: "en,hi,bn,te,mr,ta,ur,gu,kn,or,ml,pa,fra,zho", 
+				},
+				"google_translate_element"
+			);
+		}
+	</script>
+	<script type="text/javascript"
+		src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+	
+</body>
+
+</html>

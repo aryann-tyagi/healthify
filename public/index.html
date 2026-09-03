@@ -1,0 +1,1348 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Healthify | AI-Powered Healthcare Platform</title>
+  <link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+  <link rel="icon" type="image/png" sizes="32x32" href=".\src\img\aimed-icon.png" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/three@0.153.0/build/three.min.js"></script>
+  <script src="https://unpkg.com/three@0.153.0/examples/js/controls/OrbitControls.js"></script>
+  <script src="https://unpkg.com/@dotlottie/player-component@2.7.12/dist/dotlottie-player.mjs" type="module"></script>
+  <script src="https://unpkg.com/@splinetool/runtime@1.0.42/build/runtime.js"></script>
+  <script src="/public/index1.js" type="module"></script>
+
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+    :root {
+      --primary: #1e40af;
+      /* Trustworthy blue */
+      --primary-light: #60a5fa;
+      /* Lighter blue */
+      --secondary: #10b981;
+      /* Subtle green */
+      --dark: #1f2937;
+      /* Dark gray */
+      --light: #f9fafb;
+      /* Off-white */
+      --accent: #f59e0b;
+      /* Warm accent */
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--light);
+      color: var(--dark);
+      overflow-x: hidden;
+    }
+
+    .transition-all-ease {
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    @keyframes slideDownFade {
+      0% {
+        opacity: 0;
+        transform: translateY(-30px);
+      }
+
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .animate-slideDownFade {
+      animation: slideDownFade 1s ease-out forwards;
+    }
+
+    @keyframes float {
+
+      0%,
+      100% {
+        transform: translateY(0);
+      }
+
+      50% {
+        transform: translateY(-20px);
+      }
+    }
+
+    .floating {
+      animation: float 6s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+
+      0%,
+      100% {
+        transform: scale(1);
+        opacity: 1;
+      }
+
+      50% {
+        transform: scale(1.05);
+        opacity: 0.9;
+      }
+    }
+
+    .pulse-animate {
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes gradientBG {
+      0% {
+        background-position: 0% 50%;
+      }
+
+      50% {
+        background-position: 100% 50%;
+      }
+
+      100% {
+        background-position: 0% 50%;
+      }
+    }
+
+    .gradient-bg {
+      background: linear-gradient(-45deg, #1e40af, #3b82f6, #10b981, #6ee7b7);
+      background-size: 400% 400%;
+      animation: gradientBG 15s ease infinite;
+    }
+
+    .nav-link {
+      position: relative;
+      display: inline-block;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .nav-link:hover {
+      transform: scale(1.1);
+      color: var(--primary);
+    }
+
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      width: 0;
+      height: 2px;
+      bottom: -2px;
+      left: 0;
+      background-color: var(--primary);
+      transition: width 0.3s ease-in-out;
+    }
+
+    .nav-link:hover::after {
+      width: 100%;
+    }
+
+    .card-hover {
+      transition: all 0.3s ease;
+    }
+
+    .card-hover:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    }
+
+    .feature-icon {
+      transition: all 0.3s ease;
+    }
+
+    .feature-card:hover .feature-icon {
+      transform: scale(1.2) rotate(10deg);
+    }
+
+    .quote-container {
+      background: rgba(255, 255, 255, 0.8);
+      border-left: 4px solid var(--primary);
+      padding: 1rem;
+      border-radius: 0 8px 8px 0;
+      transition: all 0.5s cubic-bezier(0.25, 0.1, 0.25, 1);
+    }
+
+    .quote-container:hover {
+      transform: translateX(5px);
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    }
+
+    .glow {
+      box-shadow: 0 0 20px rgba(79, 70, 229, 0.3);
+    }
+
+    .fade-in-up {
+      animation: fadeInUp 1s ease forwards;
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .parallax {
+      background-attachment: fixed;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size: cover;
+    }
+
+    .wave-shape {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      overflow: hidden;
+      line-height: 0;
+    }
+
+    .wave-shape svg {
+      position: relative;
+      display: block;
+      width: calc(100% + 1.3px);
+      height: 150px;
+    }
+
+    .wave-shape .shape-fill {
+      fill: #FFFFFF;
+    }
+
+    #three-canvas {
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: -1;
+    }
+
+    @keyframes slideInRight {
+      0% {
+        opacity: 0;
+        transform: translateX(50px);
+      }
+
+      100% {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    .animate-slideInRight {
+      animation: slideInRight 1s ease-out;
+    }
+    /* Chatbot Animations */
+#chatWindow {
+  transform-origin: bottom right;
+  animation: popIn 0.3s ease-out forwards;
+}
+
+@keyframes popIn {
+  from {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.chat-bubble {
+  animation: fadeUp 0.25s ease-out;
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
+    /* Add this to your style section */
+  </style>
+</head>
+
+<body class="bg-white text-gray-900 transition-all duration-500 ease-in-out">
+
+  <!-- Navbar -->
+  <nav
+    class="bg-white/80 backdrop-blur-md shadow-sm sticky top-0 z-50 transition duration-500 ease-in-out animate-slideDownFade">
+    <div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
+      <!-- Logo -->
+      <div class="flex items-center space-x-2">
+        <img src="./src/img/aimed-icon-removebg.png" alt="Logo" class="h-10" />
+        <span
+          class="text-xl font-bold bg-gradient-to-r from-blue-600 to-green-600 bg-clip-text text-transparent">Healthify</span>
+      </div>
+
+      <!-- Desktop Menu -->
+      <div class="hidden md:flex space-x-6 text-sm font-medium">
+        <a href="index.html" class="nav-link hover:text-blue-600 transition-all-ease">Home</a>
+        <a href="extract-text.html" class="nav-link hover:text-blue-600 transition-all-ease">Prescription</a>
+        <a href="predictor.html" class="nav-link hover:text-blue-600 transition-all-ease">Diagnosis</a>
+        <a href="LoginSignup.html" class="nav-link hover:text-blue-600 transition-all-ease">Login</a>
+        <a href="#contact"
+          class="bg-blue-600 text-white px-4 py-2 rounded-full hover:bg-blue-700 transition-all-ease">Get Started</a>
+      </div>
+
+      <!-- Mobile Hamburger/X Toggle -->
+      <button id="navToggle" class="md:hidden text-blue-600 focus:outline-none">
+        <!-- Hamburger -->
+        <svg id="hamburgerIcon" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 block" fill="none" viewBox="0 0 24 24"
+          stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+        </svg>
+        <!-- Close -->
+        <svg id="closeIcon" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 hidden" fill="none" viewBox="0 0 24 24"
+          stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+    </div>
+
+    <!-- Mobile Menu -->
+    <div id="mobileMenu"
+      class="md:hidden hidden flex flex-col px-4 pb-4 text-sm font-medium space-y-2 bg-white shadow transition-all transform origin-top scale-95 opacity-0 duration-300 pointer-events-none">
+      <a href="index.html" class="nav-link hover:text-blue-600">Home</a>
+      <a href="extract-text.html" class="nav-link hover:text-blue-600">Prescription</a>
+      <a href="predictor.html" class="nav-link hover:text-blue-600">Diagnosis</a>
+      <a href="LoginSignup.html" class="nav-link hover:text-blue-600">Login</a>
+      <a href="#contact" class="bg-blue-600 text-white text-center px-4 py-2 rounded-full hover:bg-blue-700">Get
+        Started</a>
+    </div>
+  </nav>
+
+
+
+  <!-- Hero Section -->
+  <section class="relative overflow-hidden" id="hero-section">
+    <div class="absolute inset-0 z-0">
+      <div class="absolute inset-0 bg-gradient-to-b from-blue-500/10 to-green-500/10"></div>
+      <div class="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-10"></div>
+      <canvas id="three-canvas"></canvas>
+    </div>
+
+    <div
+      class="relative z-10 max-w-7xl mx-auto px-4 py-20 md:py-32 flex flex-col md:flex-row justify-between items-center">
+      <!-- Text Content (Left Side) -->
+      <div class="text-center md:text-left w-full md:w-1/2 px-4">
+        <div id="welcome-message" class="opacity-0">
+          <h1
+            class="text-4xl md:text-5xl lg:text-6xl font-extrabold mb-4 bg-gradient-to-r from-blue-600 to-green-600 bg-clip-text text-transparent">
+            Revolutionizing Healthcare with AI</h1>
+          <h2 class="text-xl md:text-2xl font-medium text-gray-700 mb-6">Smart diagnosis, prescription extraction, and
+            personalized health insights</h2>
+        </div>
+
+        <div class="w-full h-1 bg-gradient-to-r from-blue-400 to-green-500 rounded-full mb-8 mx-auto md:mx-0"
+          id="heading-underline" style="width: 0; max-width: 300px;"></div>
+
+        <!-- Quote -->
+        <div id="quote-box" class="quote-container mb-8 max-w-md mx-auto md:mx-0"
+          style="opacity: 0; transform: translateY(20px);">
+          <p class="text-lg italic text-gray-800">
+            "<span id="health-quote"></span>"
+            <span class="block mt-2 text-right text-sm text-blue-600">- <span id="quote-author"></span></span>
+          </p>
+        </div>
+
+        <div class="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
+          <a href="#features" id="explore-btn"
+            class="inline-block bg-blue-600 text-white px-8 py-3 rounded-full hover:bg-blue-700 transform transition duration-300 scale-90 shadow-lg hover:shadow-xl"
+            style="opacity: 0;">
+            Explore Features
+          </a>
+          <a href="LoginSignup.html"
+            class="inline-block border-2 border-blue-600 text-blue-600 px-8 py-3 rounded-full hover:bg-blue-50 transform transition duration-300 hover:scale-95"
+            style="opacity: 0;">
+            Get Started
+          </a>
+        </div>
+      </div>
+
+      <!-- Interactive Hero Right Side Showcase -->
+      <div class="w-full md:w-1/2 mt-12 md:mt-0 px-4 flex justify-center items-center relative animate-slideInRight">
+        
+        <!-- Glowing Background Aura behind the card -->
+        <div class="absolute -inset-2 bg-gradient-to-r from-blue-500/30 to-emerald-400/30 rounded-3xl blur-2xl opacity-75 animate-pulse"></div>
+
+        <!-- Floating Decorative Glass Badges -->
+        <!-- Badge 1: Pulse Monitor -->
+        <div class="absolute -top-6 -left-2 sm:-left-6 z-20 bg-white/80 backdrop-blur-md px-4 py-3 rounded-2xl shadow-xl border border-white/60 flex items-center space-x-3 floating" style="animation-duration: 5s;">
+          <div class="w-10 h-10 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-600 font-bold text-lg shadow-inner">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 animate-pulse" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+            </svg>
+          </div>
+          <div>
+            <p class="text-[11px] text-gray-500 font-medium">Live Heart Rate</p>
+            <p class="text-xs sm:text-sm font-bold text-gray-800 flex items-center gap-1">72 BPM <span class="text-[9px] bg-emerald-100 text-emerald-700 px-1.5 py-0.5 rounded-full font-semibold">Normal</span></p>
+          </div>
+        </div>
+
+        <!-- Badge 2: AI Accuracy -->
+        <div class="absolute -bottom-6 -right-2 sm:-right-6 z-20 bg-white/80 backdrop-blur-md px-4 py-3 rounded-2xl shadow-xl border border-white/60 flex items-center space-x-3 floating" style="animation-duration: 7s;">
+          <div class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-bold text-lg shadow-inner">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </div>
+          <div>
+            <p class="text-[11px] text-gray-500 font-medium">Diagnostic Precision</p>
+            <p class="text-xs sm:text-sm font-bold text-gray-800">98.5% Accuracy</p>
+          </div>
+        </div>
+
+        <!-- Main Glass Card Container -->
+        <div class="relative z-10 w-full max-w-lg bg-white/75 backdrop-blur-xl border border-white/80 rounded-3xl p-4 sm:p-6 shadow-2xl overflow-hidden group">
+          
+          <!-- Top Card Bar -->
+          <div class="flex items-center justify-between pb-3 border-b border-gray-100/80 mb-4">
+            <div class="flex items-center space-x-2">
+              <span class="relative flex h-3 w-3">
+                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                <span class="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
+              </span>
+              <span class="text-xs font-semibold uppercase tracking-wider text-gray-700">AI Health Engine</span>
+            </div>
+
+            <!-- Tab Buttons for interactive switcher -->
+            <div class="flex bg-gray-100/90 p-1 rounded-full text-xs font-medium text-gray-600">
+              <button id="hero-tab-visual" class="hero-tab-btn px-2.5 sm:px-3 py-1 rounded-full bg-blue-600 text-white transition-all duration-300 shadow-sm">3D Visual</button>
+              <button id="hero-tab-video" class="hero-tab-btn px-2.5 sm:px-3 py-1 rounded-full hover:text-blue-600 transition-all duration-300">Demo Video</button>
+              <button id="hero-tab-preview" class="hero-tab-btn px-2.5 sm:px-3 py-1 rounded-full hover:text-blue-600 transition-all duration-300">Live AI</button>
+            </div>
+          </div>
+
+          <!-- Main Content Area -->
+          <div class="relative h-[280px] sm:h-[340px] rounded-2xl overflow-hidden flex items-center justify-center bg-gradient-to-br from-slate-900 via-blue-950 to-slate-900 border border-slate-800/80 shadow-inner">
+            
+            <!-- View 1: 3D AI Health Dashboard Image with Ambient Effects & Canvas Wave -->
+            <div id="hero-view-visual" class="w-full h-full absolute inset-0 transition-all duration-500 opacity-100 flex flex-col justify-between">
+              <img src="./src/img/hero_ai_health_dashboard.png" alt="AI Healthcare Dashboard" class="w-full h-full object-cover rounded-xl transition-transform duration-700 group-hover:scale-105" />
+              <div class="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/20 to-transparent flex flex-col justify-end p-4 sm:p-5 text-white">
+                <div class="flex justify-between items-end">
+                  <div>
+                    <span class="px-2.5 py-0.5 rounded-md text-[10px] sm:text-[11px] font-semibold bg-blue-500/40 backdrop-blur-md text-blue-200 border border-blue-400/30">AI Neural Analysis</span>
+                    <h3 class="text-sm sm:text-lg font-bold mt-1 text-white">Interactive Vital & Symptom Scanner</h3>
+                  </div>
+                  <a href="predictor.html" class="bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold px-3 py-2 rounded-xl transition shadow-lg flex items-center gap-1 shrink-0">
+                    Try Scanner
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                    </svg>
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            <!-- View 2: Video Player -->
+            <div id="hero-view-video" class="w-full h-full absolute inset-0 transition-all duration-500 opacity-0 pointer-events-none">
+              <video class="w-full h-full object-cover rounded-xl" autoplay muted loop playsinline>
+                <source src="./src/vid/myvid1.webm" type="video/webm">
+                <source src="./src/vid/ai.webm" type="video/webm">
+              </video>
+              <div class="absolute bottom-3 left-3 bg-black/70 backdrop-blur-md text-white text-xs px-3 py-1.5 rounded-lg border border-white/20">
+                🎥 Platform Walkthrough Video
+              </div>
+            </div>
+
+            <!-- View 3: Live Interactive AI Symptom Simulator -->
+            <div id="hero-view-preview" class="w-full h-full absolute inset-0 transition-all duration-500 opacity-0 pointer-events-none p-4 sm:p-5 text-white flex flex-col justify-between bg-slate-900/95 backdrop-blur-xl">
+              <div>
+                <div class="flex items-center justify-between text-xs text-blue-400 font-semibold mb-3 border-b border-slate-800 pb-2">
+                  <span>AI DIAGNOSIS SIMULATOR</span>
+                  <span class="text-emerald-400 flex items-center gap-1"><span class="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-ping"></span> ONLINE</span>
+                </div>
+                <p class="text-xs text-slate-300 mb-3">Select symptoms for instant sample AI prediction:</p>
+                <div class="flex flex-wrap gap-2 mb-4" id="symptom-pills">
+                  <button data-symptom="Fever & Cough" class="symptom-tag text-xs bg-slate-800 hover:bg-blue-600 text-slate-200 border border-slate-700 px-3 py-1.5 rounded-lg transition">Fever & Cough</button>
+                  <button data-symptom="Headache" class="symptom-tag text-xs bg-slate-800 hover:bg-blue-600 text-slate-200 border border-slate-700 px-3 py-1.5 rounded-lg transition">Headache</button>
+                  <button data-symptom="Joint Pain" class="symptom-tag text-xs bg-slate-800 hover:bg-blue-600 text-slate-200 border border-slate-700 px-3 py-1.5 rounded-lg transition">Joint Pain</button>
+                </div>
+                <div id="symptom-result" class="bg-slate-800/80 border border-slate-700 p-3 rounded-xl text-xs text-slate-300 leading-relaxed">
+                  Click any symptom pill above to simulate AI prediction.
+                </div>
+              </div>
+              <a href="predictor.html" class="w-full text-center bg-gradient-to-r from-blue-600 to-emerald-500 text-white font-semibold text-xs py-2.5 rounded-xl hover:opacity-95 transition shadow-lg">
+                Run Full AI Medical Scan →
+              </a>
+            </div>
+
+          </div>
+
+          <!-- Bottom Metric Bar inside the card -->
+          <div class="grid grid-cols-3 gap-2 mt-4 pt-3 border-t border-gray-100/80 text-center">
+            <div class="p-2 rounded-xl bg-gray-50/80">
+              <span class="block text-xs font-bold text-gray-800">24/7</span>
+              <span class="text-[10px] text-gray-500 font-medium">AI Support</span>
+            </div>
+            <div class="p-2 rounded-xl bg-gray-50/80">
+              <span class="block text-xs font-bold text-blue-600">Instant</span>
+              <span class="text-[10px] text-gray-500 font-medium">Rx OCR</span>
+            </div>
+            <div class="p-2 rounded-xl bg-gray-50/80">
+              <span class="block text-xs font-bold text-emerald-600">Encrypted</span>
+              <span class="text-[10px] text-gray-500 font-medium">Data Privacy</span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- Features Section -->
+  <section id="features" class="py-16 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-16">
+        <h2
+          class="text-3xl md:text-4xl font-bold mb-4 bg-gradient-to-r from-blue-600 to-green-600 bg-clip-text text-transparent">
+          Our Powerful Features</h2>
+        <p class="text-lg text-gray-600 max-w-3xl mx-auto">Transforming healthcare with cutting-edge AI technology
+          designed to make your life easier</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-10">
+        <!-- Feature 1 - AI Diagnosis -->
+        <div
+          class="feature-card bg-white p-6 sm:p-8 rounded-xl shadow-md hover:shadow-xl transition-all duration-300 border border-gray-100 flex flex-col"
+          data-aos="fade-up">
+          <div class="w-full h-48 mb-6 rounded-lg overflow-hidden bg-gray-50 flex items-center justify-center p-4">
+            <dotlottie-player src="https://lottie.host/199d7b2a-6657-4b78-894d-1e161d450274/d4ry9WuVf1.lottie"
+              background="transparent" speed="1" style="width: 100%; height: 100%" loop autoplay>
+            </dotlottie-player>
+          </div>
+          <div class="flex-grow">
+            <h3 class="text-xl font-bold mb-3 text-gray-900">AI-Powered Diagnosis</h3>
+            <p class="text-gray-600 mb-4">Our advanced machine learning algorithms analyze your symptoms with 95%
+              accuracy to provide preliminary diagnoses and recommend next steps.</p>
+          </div>
+          <a href="predictor.html"
+            class="mt-auto text-blue-600 font-medium inline-flex items-center hover:text-blue-800 transition-colors">
+            Try Now
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1" fill="none" viewBox="0 0 24 24"
+              stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+            </svg>
+          </a>
+        </div>
+
+        <!-- Feature 2 - Prescription Extraction -->
+        <div
+          class="feature-card bg-white p-6 sm:p-8 rounded-xl shadow-md hover:shadow-xl transition-all duration-300 border border-gray-100 flex flex-col"
+          data-aos="fade-up" data-aos-delay="100">
+          <div class="w-full h-48 mb-6 rounded-lg overflow-hidden bg-gray-50 flex items-center justify-center p-4">
+            <dotlottie-player src="https://lottie.host/86753e1a-a9b1-47ec-a4df-837368238967/rj0VicaHsT.lottie"
+              background="transparent" speed="1" style="width: 100%; height: 100%" loop autoplay>
+            </dotlottie-player>
+          </div>
+          <div class="flex-grow">
+            <h3 class="text-xl font-bold mb-3 text-gray-900">Prescription Extraction</h3>
+            <p class="text-gray-600 mb-4">Simply upload an image of your prescription and our OCR technology will
+              extract all medications with dosage instructions automatically.</p>
+          </div>
+          <a href="extract-text.html"
+            class="mt-auto text-blue-600 font-medium inline-flex items-center hover:text-blue-800 transition-colors">
+            Learn More
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1" fill="none" viewBox="0 0 24 24"
+              stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+            </svg>
+          </a>
+        </div>
+
+        <!-- Feature 3 - AI Chatbot -->
+        <div
+          class="feature-card bg-white p-6 sm:p-8 rounded-xl shadow-md hover:shadow-xl transition-all duration-300 border border-gray-100 flex flex-col"
+          data-aos="fade-up" data-aos-delay="200">
+          <div class="w-full h-48 mb-6 rounded-lg overflow-hidden bg-gray-50 flex items-center justify-center p-4">
+            <dotlottie-player src="https://lottie.host/c15ac7d2-a655-4ea1-a4a8-2c50fe1956c0/RtMXdAFsu9.lottie"
+              background="transparent" speed="1" style="width: 100%; height: 100%" loop autoplay>
+            </dotlottie-player>
+          </div>
+          <div class="flex-grow">
+            <h3 class="text-xl font-bold mb-3 text-gray-900">AI Chatbot</h3>
+            <p class="text-gray-600 mb-4">Ask questions without any hesitation. Our Chatbot will give answers to each of
+              your questions.</p>
+          </div>
+          <a href="#"
+            class="mt-auto text-blue-600 font-medium inline-flex items-center hover:text-blue-800 transition-colors">
+            Coming Soon
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1" fill="none" viewBox="0 0 24 24"
+              stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+            </svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- How It Works Section -->
+  <section class="py-16 bg-gray-50">
+    <div class="max-w-7xl mx-auto px-4">
+      <div class="text-center mb-16">
+        <h2
+          class="text-3xl md:text-4xl font-bold mb-4 bg-gradient-to-r from-blue-600 to-green-600 bg-clip-text text-transparent">
+          How Healthify Works</h2>
+        <p class="text-lg text-gray-600 max-w-3xl mx-auto">Three simple steps to better healthcare management</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <!-- Step 1 -->
+        <div class="text-center" data-aos="fade-up">
+          <div class="bg-blue-100 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6">
+            <span class="text-3xl">1</span>
+          </div>
+          <h3 class="text-xl font-bold mb-3">Describe Your Symptoms</h3>
+          <p class="text-gray-600">Tell our AI about your symptoms or upload images of affected areas for preliminary
+            analysis.</p>
+        </div>
+
+        <!-- Step 2 -->
+        <div class="text-center" data-aos="fade-up" data-aos-delay="100">
+          <div class="bg-blue-100 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6">
+            <span class="text-3xl">2</span>
+          </div>
+          <h3 class="text-xl font-bold mb-3">Get AI Recommendations</h3>
+          <p class="text-gray-600">Receive potential diagnoses, recommended tests, and suggested treatments based on
+            your input.</p>
+        </div>
+
+        <!-- Step 3 -->
+        <div class="text-center" data-aos="fade-up" data-aos-delay="200">
+          <div class="bg-blue-100 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6">
+            <span class="text-3xl">3</span>
+          </div>
+          <h3 class="text-xl font-bold mb-3">Follow Up & Track</h3>
+          <p class="text-gray-600">Save your results, track your health progress, and share with healthcare
+            professionals.</p>
+        </div>
+      </div>
+
+      <div class="mt-16 text-center">
+        <a href="LoginSignup.html"
+          class="inline-block bg-blue-600 text-white px-8 py-3 rounded-full hover:bg-blue-700 transition duration-300 shadow-lg hover:shadow-xl">
+          Start Your Health Journey Today
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Stats Section -->
+  <section class="py-16 gradient-bg text-white">
+    <div class="max-w-7xl mx-auto px-4">
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+        <div class="p-6" data-aos="fade-up">
+          <div class="text-4xl md:text-5xl font-bold mb-2" id="stat1">0</div>
+          <div class="text-sm uppercase tracking-wider">Users Served</div>
+        </div>
+        <div class="p-6" data-aos="fade-up" data-aos-delay="100">
+          <div class="text-4xl md:text-5xl font-bold mb-2" id="stat2">0</div>
+          <div class="text-sm uppercase tracking-wider">Accurate Diagnoses</div>
+        </div>
+        <div class="p-6" data-aos="fade-up" data-aos-delay="200">
+          <div class="text-4xl md:text-5xl font-bold mb-2" id="stat3">0</div>
+          <div class="text-sm uppercase tracking-wider">Prescriptions Analyzed</div>
+        </div>
+        <div class="p-6" data-aos="fade-up" data-aos-delay="300">
+          <div class="text-4xl md:text-5xl font-bold mb-2" id="stat4">0</div>
+          <div class="text-sm uppercase tracking-wider">Countries</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Testimonials Section -->
+  <section class="py-16 bg-white">
+    <div class="max-w-7xl mx-auto px-4">
+      <div class="text-center mb-16">
+        <h2
+          class="text-3xl md:text-4xl font-bold mb-4 bg-gradient-to-r from-blue-600 to-green-600 bg-clip-text text-transparent">
+          What Our Users Say</h2>
+        <p class="text-lg text-gray-600 max-w-3xl mx-auto">Hear from people who have transformed their healthcare
+          experience</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <!-- Testimonial 1 -->
+        <div class="bg-gray-50 p-8 rounded-xl shadow-md" data-aos="fade-up">
+          <div class="flex items-center mb-4">
+            <div class="text-yellow-400 text-2xl">★★★★★</div>
+          </div>
+          <p class="text-gray-700 italic mb-6">"Healthify's AI diagnosis helped me identify a condition my doctor
+            initially missed. It literally saved my life!"</p>
+          <div class="flex items-center">
+            <img src="https://randomuser.me/api/portraits/women/32.jpg" alt="Sarah J."
+              class="w-12 h-12 rounded-full mr-4">
+            <div>
+              <h4 class="font-bold">Sarah Johnson</h4>
+              <p class="text-sm text-gray-500">Medical Student</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Testimonial 2 -->
+        <div class="bg-gray-50 p-8 rounded-xl shadow-md" data-aos="fade-up" data-aos-delay="100">
+          <div class="flex items-center mb-4">
+            <div class="text-yellow-400 text-2xl">★★★★☆</div>
+          </div>
+          <p class="text-gray-700 italic mb-6">"The prescription scanner saves me hours each week. No more manual entry
+            of patient medications!"</p>
+          <div class="flex items-center">
+            <img src="https://randomuser.me/api/portraits/men/45.jpg" alt="Dr. Michael"
+              class="w-12 h-12 rounded-full mr-4">
+            <div>
+              <h4 class="font-bold">Dr. Michael Tan</h4>
+              <p class="text-sm text-gray-500">General Practitioner</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Testimonial 3 -->
+        <div class="bg-gray-50 p-8 rounded-xl shadow-md" data-aos="fade-up" data-aos-delay="200">
+          <div class="flex items-center mb-4">
+            <div class="text-yellow-400 text-2xl">★★★★★</div>
+          </div>
+          <p class="text-gray-700 italic mb-6">"As a caregiver for my elderly parents, Healthify has been invaluable for
+            managing their complex medication schedules."</p>
+          <div class="flex items-center">
+            <img src="https://randomuser.me/api/portraits/women/68.jpg" alt="Jennifer."
+              class="w-12 h-12 rounded-full mr-4">
+            <div>
+              <h4 class="font-bold">Jennifer </h4>
+              <p class="text-sm text-gray-500">Family Caregiver</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- News Section -->
+  <section id="news-section" class="py-16 bg-gray-50 fade-in-up">
+    <div class="max-w-7xl mx-auto px-4">
+      <h2
+        class="text-3xl md:text-4xl font-bold text-center mb-6 bg-gradient-to-r from-blue-600 to-green-600 bg-clip-text text-transparent">
+        Latest Healthcare News</h2>
+      <p class="text-lg text-gray-600 text-center mb-12 max-w-3xl mx-auto">Stay informed with the latest developments in
+        medicine and healthcare technology</p>
+
+      <div id="news-container" class="grid gap-8 md:grid-cols-2 lg:grid-cols-3"></div>
+
+      <div class="text-center mt-12">
+        <button id="load-more"
+          class="bg-white text-blue-600 px-6 py-2 rounded-full border border-blue-600 hover:bg-blue-600 hover:text-white transition duration-300">
+          Load More Articles
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="py-20 bg-gradient-to-r from-blue-600 to-green-600 text-white">
+    <div class="max-w-4xl mx-auto px-4 text-center">
+      <h2 class="text-3xl md:text-4xl font-bold mb-6">Ready to Transform Your Healthcare Experience?</h2>
+      <p class="text-xl mb-8 max-w-2xl mx-auto">Join thousands of users who are already benefiting from AI-powered
+        healthcare solutions.</p>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <a href="LoginSignup.html"
+          class="inline-block bg-white text-blue-600 px-8 py-3 rounded-full hover:bg-gray-100 transform transition duration-300 hover:scale-105 shadow-lg">
+          Get Started for Free
+        </a>
+        <a href="#features"
+          class="inline-block border-2 border-white text-white px-8 py-3 rounded-full hover:bg-white/10 transform transition duration-300 hover:scale-95">
+          Learn More
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-gray-900 text-white pt-16 pb-8">
+    <div class="max-w-7xl mx-auto px-4">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
+        <div>
+          <div class="flex items-center mb-4">
+            <img src="./src/img/aimed-icon.png" alt="Logo" class="h-10 mr-2" />
+            <span class="text-xl font-bold">Healthify</span>
+          </div>
+          <p class="text-gray-400">AI-powered healthcare solutions for the modern world.</p>
+          <div class="flex space-x-4 mt-4">
+            <a href="#" class="text-gray-400 hover:text-white transition"><i class="fab fa-twitter"></i></a>
+            <a href="#" class="text-gray-400 hover:text-white transition"><i class="fab fa-facebook"></i></a>
+            <a href="#" class="text-gray-400 hover:text-white transition"><i class="fab fa-linkedin"></i></a>
+          </div>
+        </div>
+
+        <div>
+          <h3 class="text-lg font-semibold mb-4">Quick Links</h3>
+          <ul class="space-y-2">
+            <li><a href="index.html" class="text-gray-400 hover:text-white transition">Home</a></li>
+            <li><a href="extract-text.html" class="text-gray-400 hover:text-white transition">Prescription Scanner</a>
+            </li>
+            <li><a href="predictor.html" class="text-gray-400 hover:text-white transition">AI Diagnosis</a></li>
+            <li><a href="LoginSignup.html" class="text-gray-400 hover:text-white transition">Login/Signup</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h3 class="text-lg font-semibold mb-4">Resources</h3>
+          <ul class="space-y-2">
+            <li><a href="#" class="text-gray-400 hover:text-white transition">Blog</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-white transition">Help Center</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-white transition">Privacy Policy</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-white transition">Terms of Service</a></li>
+          </ul>
+        </div>
+
+        <div id="contact">
+          <h3 class="text-lg font-semibold mb-4">Contact Us</h3>
+          <p class="text-gray-400 mb-2">Have questions? Reach out to us!</p>
+        </div>
+      </div>
+
+      <div class="border-t border-gray-800 pt-8 text-center text-gray-400">
+        <p>&copy; <span id="copyright-year">2026</span> Healthify. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+  <script>
+    // Initialize AOS
+    AOS.init({
+      once: true,
+      duration: 800,
+      offset: 100,
+    });
+
+    // Dynamic Copyright Year
+    const copyYearEl = document.getElementById('copyright-year');
+    if (copyYearEl) copyYearEl.textContent = new Date().getFullYear();
+
+    // Health Quotes
+    const healthQuotes = [
+      { text: "The greatest wealth is health.", author: "Virgil" },
+      { text: "Health is a state of complete harmony of the body, mind and spirit.", author: "B.K.S. Iyengar" },
+      { text: "Take care of your body. It's the only place you have to live.", author: "Jim Rohn" },
+      { text: "A healthy outside starts from the inside.", author: "Robert Urich" },
+      { text: "Your health is an investment, not an expense.", author: "Unknown" },
+      { text: "The first wealth is health.", author: "Ralph Waldo Emerson" }
+    ];
+
+    // Hero Animations
+    function initHeroAnimations() {
+      const heroSection = document.getElementById('hero-section');
+      const underline = document.getElementById('heading-underline');
+      const quoteBox = document.getElementById('quote-box');
+      const exploreBtn = document.getElementById('explore-btn');
+      const welcome = document.getElementById('welcome-message');
+
+      welcome.classList.add('animate-slideDownFade');
+      welcome.style.opacity = 1;
+      heroSection.style.display = 'block';
+
+      underline.style.transition = 'width 0.8s ease';
+      underline.style.width = '100%';
+
+      setTimeout(() => {
+        quoteBox.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+        quoteBox.style.opacity = '1';
+        quoteBox.style.transform = 'translateY(0)';
+
+        setTimeout(() => {
+          exploreBtn.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+          exploreBtn.style.opacity = '1';
+          exploreBtn.style.transform = 'scale(1)';
+        }, 400);
+
+        displayRandomQuote();
+        setInterval(displayRandomQuote, 8000);
+      }, 500);
+
+      const newsSection = document.getElementById('news-section');
+      newsSection.classList.add('fade-in-up');
+      newsSection.style.opacity = 1;
+    }
+
+    function displayRandomQuote() {
+      const quoteBox = document.getElementById('quote-box');
+      const randomIndex = Math.floor(Math.random() * healthQuotes.length);
+      const quote = healthQuotes[randomIndex];
+
+      quoteBox.style.opacity = '0';
+      setTimeout(() => {
+        document.getElementById('health-quote').textContent = quote.text;
+        document.getElementById('quote-author').textContent = quote.author;
+        quoteBox.style.opacity = '1';
+      }, 300);
+    }
+
+    window.addEventListener("load", initHeroAnimations);
+
+
+    // Three.js DNA Background Animation
+    function initDNAAnimation() {
+      const canvas = document.getElementById('three-canvas');
+      if (!canvas || typeof THREE === 'undefined') return;
+
+      const scene = new THREE.Scene();
+      const camera = new THREE.PerspectiveCamera(75, canvas.clientWidth / canvas.clientHeight, 0.1, 1000);
+      const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+
+      renderer.setSize(canvas.clientWidth || window.innerWidth, canvas.clientHeight || 500);
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+      const particleCount = 100;
+      const geometry = new THREE.BufferGeometry();
+      const positions = new Float32Array(particleCount * 3);
+      const colors = new Float32Array(particleCount * 3);
+
+      const color1 = new THREE.Color('#2563eb');
+      const color2 = new THREE.Color('#10b981');
+
+      for (let i = 0; i < particleCount; i++) {
+        const t = (i / particleCount) * Math.PI * 6;
+        const strand = i % 2 === 0 ? 1 : -1;
+        const radius = 2.2;
+
+        positions[i * 3] = Math.cos(t) * radius * strand;
+        positions[i * 3 + 1] = (i / particleCount) * 10 - 5;
+        positions[i * 3 + 2] = Math.sin(t) * radius * strand;
+
+        const mixColor = color1.clone().lerp(color2, i / particleCount);
+        colors[i * 3] = mixColor.r;
+        colors[i * 3 + 1] = mixColor.g;
+        colors[i * 3 + 2] = mixColor.b;
+      }
+
+      geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+      geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+
+      const material = new THREE.PointsMaterial({
+        size: 0.15,
+        vertexColors: true,
+        transparent: true,
+        opacity: 0.6
+      });
+
+      const dnaMesh = new THREE.Points(geometry, material);
+      scene.add(dnaMesh);
+
+      camera.position.z = 7;
+
+      function animate() {
+        requestAnimationFrame(animate);
+        dnaMesh.rotation.y += 0.003;
+        dnaMesh.rotation.x += 0.001;
+        renderer.render(scene, camera);
+      }
+
+      animate();
+    }
+
+    // Hero Interactive Tab & Symptom Simulator Handler
+    function initHeroTabs() {
+      const btnVisual = document.getElementById('hero-tab-visual');
+      const btnVideo = document.getElementById('hero-tab-video');
+      const btnPreview = document.getElementById('hero-tab-preview');
+
+      const viewVisual = document.getElementById('hero-view-visual');
+      const viewVideo = document.getElementById('hero-view-video');
+      const viewPreview = document.getElementById('hero-view-preview');
+
+      if (!btnVisual || !btnVideo || !btnPreview) return;
+
+      const tabs = [
+        { btn: btnVisual, view: viewVisual },
+        { btn: btnVideo, view: viewVideo },
+        { btn: btnPreview, view: viewPreview }
+      ];
+
+      tabs.forEach(({ btn, view }) => {
+        btn.addEventListener('click', () => {
+          tabs.forEach(t => {
+            t.btn.classList.remove('bg-blue-600', 'text-white', 'shadow-sm');
+            t.btn.classList.add('hover:text-blue-600');
+            if (t.view) {
+              t.view.classList.add('opacity-0', 'pointer-events-none');
+              t.view.classList.remove('opacity-100');
+            }
+          });
+
+          btn.classList.add('bg-blue-600', 'text-white', 'shadow-sm');
+          btn.classList.remove('hover:text-blue-600');
+          if (view) {
+            view.classList.remove('opacity-0', 'pointer-events-none');
+            view.classList.add('opacity-100');
+          }
+        });
+      });
+
+      // Interactive Symptom Pill Simulator
+      const symptomTags = document.querySelectorAll('.symptom-tag');
+      const symptomResult = document.getElementById('symptom-result');
+
+      const simulatedResults = {
+        "Fever & Cough": "💡 <strong>AI Prediction:</strong> Viral Upper Respiratory Infection (94% confidence). <br/><span class='text-emerald-400'>Recommendation:</span> Rest, hydration & AI Prescription review.",
+        "Headache": "💡 <strong>AI Prediction:</strong> Tension Headache / Migraine (91% confidence). <br/><span class='text-emerald-400'>Recommendation:</span> Hydration, dim light, monitor duration.",
+        "Joint Pain": "💡 <strong>AI Prediction:</strong> Inflammatory Response (88% confidence). <br/><span class='text-emerald-400'>Recommendation:</span> Warm compress, rest, consult doctor."
+      };
+
+      symptomTags.forEach(tag => {
+        tag.addEventListener('click', () => {
+          symptomTags.forEach(t => t.classList.remove('bg-blue-600', 'text-white'));
+          tag.classList.add('bg-blue-600', 'text-white');
+          const symptom = tag.dataset.symptom;
+          if (symptomResult && simulatedResults[symptom]) {
+            symptomResult.innerHTML = simulatedResults[symptom];
+          }
+        });
+      });
+    }
+
+    // Three.js Feature Icons
+    function initFeatureIcons() {
+      const canvases = document.querySelectorAll('.feature-icon');
+
+      canvases.forEach(canvas => {
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, 1, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ canvas, alpha: true });
+
+        renderer.setSize(64, 64);
+        camera.position.z = 5;
+
+        let geometry;
+        const iconType = canvas.dataset.icon;
+
+        if (iconType === 'stethoscope') {
+          geometry = new THREE.TorusGeometry(1, 0.2, 16, 100);
+        } else if (iconType === 'prescription') {
+          geometry = new THREE.BoxGeometry(1.5, 2, 0.2);
+        } else if (iconType === 'pill') {
+          geometry = new THREE.CapsuleGeometry(0.5, 1, 16, 32);
+        }
+
+        const material = new THREE.MeshPhongMaterial({ color: 0x1e40af });
+        const mesh = new THREE.Mesh(geometry, material);
+        scene.add(mesh);
+
+        const light = new THREE.PointLight(0xffffff, 1, 100);
+        light.position.set(5, 5, 5);
+        scene.add(light);
+
+        function animate() {
+          requestAnimationFrame(animate);
+          mesh.rotation.x += 0.01;
+          mesh.rotation.y += 0.01;
+          renderer.render(scene, camera);
+        }
+
+        animate();
+      });
+    }
+
+    // News API
+    const apiKey = 'e65816ad281044b2b96ee83398386eee';
+    const newsContainer = document.getElementById('news-container');
+    const loadMoreBtn = document.getElementById('load-more');
+    let currentPage = 1;
+    const pageSize = 6;
+
+    async function fetchNews(page = 1) {
+      try {
+        const res = await fetch(`https://newsapi.org/v2/everything?q=healthcare&language=en&pageSize=${pageSize}&page=${page}&apiKey=${apiKey}`);
+        const data = await res.json();
+
+        data.articles.forEach((article, i) => {
+          const card = document.createElement('div');
+          card.className = 'bg-white rounded-xl overflow-hidden shadow-lg card-hover';
+          card.setAttribute('data-aos', 'fade-up');
+          card.setAttribute('data-aos-delay', i * 100);
+
+          card.innerHTML = `
+          <img src="${article.urlToImage || 'https://via.placeholder.com/400x200?text=Health+News'}" 
+               class="w-full h-48 object-cover" 
+               onerror="this.src='https://via.placeholder.com/400x200?text=Health+News'">
+          <div class="p-6">
+            <span class="text-xs text-blue-600 font-semibold">${new Date(article.publishedAt).toLocaleDateString()}</span>
+            <h3 class="text-xl font-bold my-2 hover:text-blue-600 transition-colors duration-300">${article.title}</h3>
+            <p class="text-gray-600 mb-4">${article.description || 'No description available'}</p>
+            <a href="${article.url}" target="_blank" 
+               class="inline-flex items-center text-blue-600 hover:text-blue-800 font-medium">
+              Read More
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+              </svg>
+            </a>
+          </div>
+        `;
+          newsContainer.appendChild(card);
+        });
+
+        if (data.articles.length < pageSize) {
+          loadMoreBtn.style.display = 'none';
+        }
+      } catch (err) {
+        newsContainer.innerHTML = '<p class="text-red-500 col-span-3 text-center py-8">Error loading healthcare news. Please try again later.</p>';
+        loadMoreBtn.style.display = 'none';
+      }
+    }
+
+    loadMoreBtn.addEventListener('click', () => {
+      currentPage++;
+      fetchNews(currentPage);
+    });
+
+    fetchNews();
+
+    // Stats Counter Animation
+    function animateValue(id, start, end, duration) {
+      const obj = document.getElementById(id);
+      let startTimestamp = null;
+      const step = (timestamp) => {
+        if (!startTimestamp) startTimestamp = timestamp;
+        const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+        obj.innerHTML = Math.floor(progress * (end - start) + start);
+        if (progress < 1) {
+          window.requestAnimationFrame(step);
+        }
+      };
+      window.requestAnimationFrame(step);
+    }
+
+    // Start counter animations when stats section is in view
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          animateValue('stat1', 0, 10000, 2000);
+          animateValue('stat2', 0, 9500, 2000);
+          animateValue('stat3', 0, 25000, 2000);
+          animateValue('stat4', 0, 35, 2000);
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.5 });
+
+    observer.observe(document.querySelector('.gradient-bg'));
+
+    // Navbar scroll effect
+    const navbar = document.querySelector("nav");
+    window.addEventListener("scroll", () => {
+      if (window.scrollY > 20) {
+        navbar.classList.add("bg-white");
+        navbar.classList.add("shadow-md");
+        navbar.classList.remove("bg-transparent");
+        navbar.classList.remove("shadow-sm");
+      } else {
+        navbar.classList.add("bg-transparent");
+        navbar.classList.add("shadow-sm");
+        navbar.classList.remove("bg-white");
+        navbar.classList.remove("shadow-md");
+      }
+    });
+
+    // Smooth scrolling for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+
+        document.querySelector(this.getAttribute('href')).scrollIntoView({
+          behavior: 'smooth'
+        });
+      });
+    });
+
+    // Initialize 3D animations & Hero Interactive Features
+    initDNAAnimation();
+    initFeatureIcons();
+    initHeroTabs();
+  </script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const toggleBtn = document.getElementById("navToggle");
+      const mobileMenu = document.getElementById("mobileMenu");
+      const hamburgerIcon = document.getElementById("hamburgerIcon");
+      const closeIcon = document.getElementById("closeIcon");
+
+      let isOpen = false;
+
+      const showMenu = () => {
+        mobileMenu.classList.remove("hidden", "opacity-0", "scale-95", "pointer-events-none");
+        mobileMenu.classList.add("opacity-100", "scale-100", "pointer-events-auto");
+
+        hamburgerIcon.classList.add("hidden");
+        closeIcon.classList.remove("hidden");
+      };
+
+      const hideMenu = () => {
+        mobileMenu.classList.add("opacity-0", "scale-95", "pointer-events-none");
+        mobileMenu.classList.remove("opacity-100", "scale-100", "pointer-events-auto");
+
+        hamburgerIcon.classList.remove("hidden");
+        closeIcon.classList.add("hidden");
+
+        // Delay hiding the element for smooth transition
+        setTimeout(() => {
+          if (!mobileMenu.classList.contains("opacity-100")) {
+            mobileMenu.classList.add("hidden");
+          }
+        }, 300); // match Tailwind duration
+      };
+
+      toggleBtn.addEventListener("click", () => {
+        isOpen = !isOpen;
+        isOpen ? showMenu() : hideMenu();
+      });
+
+      // Optional: auto-close menu when clicking a link
+      mobileMenu.addEventListener("click", (e) => {
+        if (e.target.tagName === "A") {
+          isOpen = false;
+          hideMenu();
+        }
+      });
+    });
+  </script>
+<!-- 🤖 AI Chatbot -->
+<div id="chatbot" class="fixed bottom-6 right-6 z-50">
+
+  <!-- Chat Button -->
+  <button id="chatToggle"
+    class="w-14 h-14 rounded-full bg-blue-600 text-white text-2xl shadow-lg hover:bg-blue-700 transition">
+    💬
+  </button>
+
+  <!-- Chat Window -->
+  <div id="chatWindow"
+    class="hidden mt-3 w-80 h-[420px] bg-white rounded-2xl shadow-xl flex flex-col overflow-hidden">
+
+    <!-- Header -->
+    <div class="bg-blue-600 text-white px-4 py-3 font-semibold flex justify-between items-center">
+      <span>Healthify AI</span>
+      <button id="chatClose">✕</button>
+    </div>
+
+    <!-- Messages -->
+    <div id="chatMessages" class="flex-1 p-4 space-y-3 overflow-y-auto text-sm">
+      <div class="bg-gray-100 p-3 rounded-lg">
+        👋 Hi! I’m your AI health assistant.  
+        How can I help you today?
+      </div>
+    </div>
+
+    <!-- Input -->
+    <div class="border-t p-3 flex gap-2">
+      <input id="chatInput" type="text"
+        placeholder="Ask something..."
+        class="flex-1 border rounded-lg px-3 py-2 text-sm focus:outline-none">
+      <button id="chatSend"
+        class="bg-blue-600 text-white px-4 rounded-lg hover:bg-blue-700">
+        Send
+      </button>
+    </div>
+  </div>
+
+</div>
+<script>
+  const GROQ_API_KEY = process?.env?.GROQ_API_KEY || "YOUR_GROQ_API_KEY";
+
+  const chatToggle = document.getElementById("chatToggle");
+  const chatWindow = document.getElementById("chatWindow");
+  const chatClose = document.getElementById("chatClose");
+  const chatSend = document.getElementById("chatSend");
+  const chatInput = document.getElementById("chatInput");
+  const chatMessages = document.getElementById("chatMessages");
+
+  chatToggle.onclick = () => chatWindow.classList.toggle("hidden");
+  chatClose.onclick = () => chatWindow.classList.add("hidden");
+
+  chatSend.onclick = sendMessage;
+  chatInput.addEventListener("keydown", e => {
+    if (e.key === "Enter") sendMessage();
+  });
+
+  async function sendMessage() {
+    const message = chatInput.value.trim();
+    if (!message) return;
+
+    appendMessage(message, "user");
+    chatInput.value = "";
+
+    appendMessage("Thinking...", "bot", true);
+
+    try {
+      const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+        method: "POST",
+        headers: {
+          "Authorization": "Bearer " + GROQ_API_KEY,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          model: "openai/gpt-oss-120b",
+          messages: [
+            {
+              role: "system",
+              content: "You are a helpful medical AI assistant. Give clear, safe, and concise responses."
+            },
+            { role: "user", content: message }
+          ]
+        })
+      });
+
+      const data = await res.json();
+      removeThinking();
+
+      const reply = data.choices?.[0]?.message?.content || "Sorry, I couldn't respond.";
+      appendMessage(reply, "bot");
+
+    } catch (err) {
+      removeThinking();
+      appendMessage("⚠️ Error connecting to AI.", "bot");
+    }
+  }
+
+  function appendMessage(text, type, thinking = false) {
+  const div = document.createElement("div");
+  div.className =
+    "chat-bubble " +
+    (type === "user"
+      ? "bg-blue-600 text-white p-3 rounded-lg self-end"
+      : "bg-gray-100 p-3 rounded-lg");
+
+  if (thinking) div.id = "thinking";
+  div.textContent = text;
+
+  chatMessages.appendChild(div);
+  chatMessages.scrollTop = chatMessages.scrollHeight;
+}
+
+
+  function removeThinking() {
+    const t = document.getElementById("thinking");
+    if (t) t.remove();
+  }
+</script>
+
+</body>
+
+</html>
