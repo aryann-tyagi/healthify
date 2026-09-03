@@ -25,8 +25,6 @@ const auth = getAuth(app);
 const googleProvider = new GoogleAuthProvider();
 
 document.addEventListener("DOMContentLoaded", () => {
-  const authBtnP = document.getElementById("auth-btn-phone");
-  const authBtnD = document.getElementById("auth-btn-desktop");
   const signupForm = document.querySelector("#signupform");
   const loginForm = document.querySelector("#loginform");
   const googleLoginBtn = document.getElementById("googleLoginBtn");
@@ -35,33 +33,76 @@ document.addEventListener("DOMContentLoaded", () => {
   // Track Firebase Auth status
   onAuthStateChanged(auth, (user) => {
     if (user) {
+      const displayName = user.displayName || (user.email ? user.email.split("@")[0] : "User");
       const userData = {
         uid: user.uid,
         email: user.email,
-        displayName: user.displayName || user.email.split("@")[0]
+        displayName: displayName
       };
       localStorage.setItem("user", JSON.stringify(userData));
-
-      if (authBtnP) {
-        authBtnP.innerHTML = "Logout";
-        authBtnP.onclick = handleLogout;
-      }
-      if (authBtnD) {
-        authBtnD.innerHTML = "Logout";
-        authBtnD.onclick = handleLogout;
-      }
+      updateHeaderUI(user);
     } else {
       localStorage.removeItem("user");
-      if (authBtnP) {
-        authBtnP.innerHTML = "Login / Signup";
-        authBtnP.onclick = () => { window.location.href = "LoginSignup.html"; };
-      }
-      if (authBtnD) {
-        authBtnD.innerHTML = "Login / Signup";
-        authBtnD.onclick = () => { window.location.href = "LoginSignup.html"; };
-      }
+      updateHeaderUI(null);
     }
   });
+
+  function updateHeaderUI(user) {
+    // Select login links across all pages and headers
+    const loginLinks = document.querySelectorAll('a[href*="LoginSignup.html"], #auth-btn-desktop, #auth-btn-phone');
+
+    loginLinks.forEach((link) => {
+      // Don't modify links that are in form footers or explicit signup prompts inside page body
+      if (link.closest("form") || link.closest("p.mt-8") || link.closest(".footer-links")) {
+        return;
+      }
+
+      const container = link.parentElement;
+      let existingBadge = container ? container.querySelector(".user-profile-badge") : null;
+
+      if (user) {
+        // User is logged in: remove/hide Login button and show user name + logout button
+        const rawName = user.displayName || (user.email ? user.email.split("@")[0] : "User");
+        const formattedName = rawName.charAt(0).toUpperCase() + rawName.slice(1);
+
+        if (!existingBadge) {
+          existingBadge = document.createElement("div");
+          existingBadge.className = "user-profile-badge inline-flex items-center gap-2 bg-blue-50 border border-blue-200 px-3 py-1.5 rounded-full text-blue-800 font-semibold text-xs md:text-sm shadow-sm transition-all";
+          existingBadge.innerHTML = `
+            <span class="flex items-center gap-1.5">
+              <svg class="w-4 h-4 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"></path>
+              </svg>
+              <span>${formattedName}</span>
+            </span>
+            <button class="header-logout-btn bg-rose-500 hover:bg-rose-600 text-white px-2.5 py-0.5 rounded-full text-xs font-bold transition-all shadow-sm">
+              Logout
+            </button>
+          `;
+
+          const logoutBtn = existingBadge.querySelector(".header-logout-btn");
+          if (logoutBtn) {
+            logoutBtn.addEventListener("click", handleLogout);
+          }
+
+          if (container) {
+            container.insertBefore(existingBadge, link);
+          }
+        } else {
+          const nameSpan = existingBadge.querySelector("span span");
+          if (nameSpan) nameSpan.textContent = formattedName;
+        }
+
+        link.style.display = "none";
+      } else {
+        // User logged out: show Login button and remove user profile badge
+        if (existingBadge) {
+          existingBadge.remove();
+        }
+        link.style.display = "";
+      }
+    });
+  }
 
   async function handleLogout(e) {
     if (e) e.preventDefault();
