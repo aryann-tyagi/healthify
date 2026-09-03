@@ -99,7 +99,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const userCredential = await createUserWithEmailAndPassword(auth, email, password);
         console.log("Signup success:", userCredential.user);
         alert("Account created successfully!");
-        window.location.href = "profile.html";
+        window.location.href = "index.html";
       } catch (error) {
         console.error("Signup error:", error);
         let msg = "Signup failed. Please try again.";
@@ -129,7 +129,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const userCredential = await signInWithEmailAndPassword(auth, email, password);
         console.log("Login success:", userCredential.user);
         alert("Logged in successfully!");
-        window.location.href = "profile.html";
+        window.location.href = "index.html";
       } catch (error) {
         console.error("Login error:", error);
         let msg = "Login failed. Please check your credentials.";
@@ -149,7 +149,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const result = await signInWithPopup(auth, googleProvider);
         console.log("Google Sign-In success:", result.user);
         alert("Signed in with Google successfully!");
-        window.location.href = "profile.html";
+        window.location.href = "index.html";
       } catch (error) {
         console.error("Google sign in error:", error);
         const msg = error.message || "Google Sign-In failed.";
